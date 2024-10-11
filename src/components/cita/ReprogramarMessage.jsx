@@ -80,7 +80,7 @@ function ReprogramarMessage({ id, token, message }) {
           REPROGRAMAR
         </Button>
       )}
-      {message !== null || message !== undefined && (
+      {message.length > 0 && (
         <Button color="green">SU MENSAJE FUE ENVIADO</Button>
       )}
     </>

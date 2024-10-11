@@ -37,7 +37,10 @@ const Page = () => {
   const [files, setFiles] = useState({}); // era objeto
   const matches = useMediaQuery("(min-width: 1099px)");
   const [loadingFile, setLoadingFile] = useState(false);
-  const [idVeryCite, setVeryCiteid] = useState(null);
+  const [idVeryCite, setVeryCiteid] = useState({
+    id: null,
+    message: null,
+  });
   const [stateOk, setEstadoOk] = useState({});
   const [statusComplete, setStatusComplete] = useState({});
   const allTrue =
@@ -54,9 +57,7 @@ const Page = () => {
         setFilesArray(data);
         const validCitaFetch = await dataApi.getValidCita(token, id);
         const veryReserva = await dataApi.verifyCita(token, id);
-
-        // console.log(validCitaFetch, "validacton");
-        console.log(veryReserva,"verificacion");
+        console.log(veryReserva,"viendo reserva");
         
         setValidCita(validCitaFetch);
         if (
@@ -83,8 +84,12 @@ const Page = () => {
         }
 
         if (veryReserva.ok) {
-          setVeryCiteid(veryReserva.appointment.id)
-          setView(4)}
+          setVeryCiteid({
+            idcita: veryReserva.appointment.id,
+            message: veryReserva.appointment.message,
+          });
+          setView(4);
+        }
       } finally {
         setLoading(false);
         setLoadingFile(false);
@@ -129,11 +134,12 @@ const Page = () => {
             <Username firstName={user.firstName} lastName={user.lastName} />
           )}
           <div className="px-10 py-4">
-            {validCita?.processStatus?.status === "VERIFICADO" && validCita?.processStatus?.status !== "CITA_PROGRAMADA" && (
-              <CountdownTwoWeeks
-                startDate={validCita?.processStatus?.updatedAt}
-              />
-            )}
+            {validCita?.processStatus?.status === "VERIFICADO" &&
+              validCita?.processStatus?.status !== "CITA_PROGRAMADA" && (
+                <CountdownTwoWeeks
+                  startDate={validCita?.processStatus?.updatedAt}
+                />
+              )}
             {(view == 0 || view == 3) && (
               <h1 className="text-2xl font-bold mb-4">
                 SEGUIMIENTO DE TRÁMITE
@@ -188,7 +194,13 @@ const Page = () => {
                     VER CITA
                   </Button>
                 )}
-                {validCita?.processStatus?.status === "CITA_PROGRAMADA" && <ReprogramarMessage id={idVeryCite} token={user.token} />}
+                {validCita?.processStatus?.status === "CITA_PROGRAMADA" && (
+                  <ReprogramarMessage
+                    id={idVeryCite.idcita}
+                    message={idVeryCite.message}
+                    token={user.token}
+                  />
+                )}
               </div>
               {view == 3 &&
                 validCita?.processStatus?.status === "VERIFICADO" && (
