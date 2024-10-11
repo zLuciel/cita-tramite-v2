@@ -1,0 +1,240 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+/*SELECT NUMERO DOGBE*/
+.m_347db0ec:where([data-block]) {
+  display: flex;
+  width: max-content !important;
+}
+.headerdas {
+  min-height: calc(100vh - 76px);
+}
+.header-name {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.129); /* Sombra */
+  background: rgb(244, 243, 243);
+}
+.gap-personalizada {
+  gap: 5px;
+}
+.cal-header-main{
+  height: calc(100vh - 78px);
+}
+.main-admi{
+  min-height: calc(100vh - 78px) !important;
+}
+body {
+  min-height: 100vh;
+  background: white !important;
+  /* background-image: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%); */
+  font-family: Arial, Helvetica, sans-serif;
+}
+.login-page,.presentacion {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+.presentacion{
+  min-height: calc(100vh - 78px);
+}
+.max-presentacion{
+  max-width: 800px;
+}
+.fecha-registre{
+  border: 1px solid rgba(141, 141, 141, 0.73);
+  width: 100%;
+  padding: 3px;
+  border-radius: 3px;
+  font-size: .9rem;
+}
+
+.header-file-seguimiento{
+  height: 100vh;
+  width: 100%;
+}
+.header-file-normal{
+  /* border: 2px solid red;
+  width: 100%;*/
+  height: calc(100vh - 130px); 
+  /* height: 100vh; */
+  width: 100%;
+}
+.login-page::before,.presentacion::before  {
+  overflow: hidden;
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+      url(https://s3.amazonaws.com/semanaeconomica.bucket/semanaeconomica2/articles/banner/35887_1682619081_banner.jpg)
+      center center/cover no-repeat;
+  z-index: -1;
+}
+.login-page::after,.presentacion::after{
+  overflow: hidden;
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.445);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: -1;
+}
+.mantine-Button-label {
+  overflow: visible !important;
+}
+.body-grid {
+  display: grid;
+  gap: 0;
+  grid-template-columns: 360px 1fr;
+}
+.login {
+  max-width: 400px;
+}
+.login-email-very {
+  background-image: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%);
+}
+.registre {
+  max-width: 700px;
+}
+.loadingFile{
+  background: rgba(255, 255, 255, 0.447);
+  backdrop-filter: blur(2px);
+}
+.bg-blue {
+  background-color: rgb(54 95 150 / 1);
+}
+.email-icon {
+  /* background-image: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%); */
+  fill: #a9f100;
+}
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+.m_1e0e6180{
+  height: auto !important;
+}
+/* .m_8d3f4000{
+  background: linear-gradient(90deg, #fa5252 0%, #e64980 100%) !important;
+} */
+main {
+  min-height: 100vh;
+}
+/* .m_5df29311{
+  height: calc(100vh - 60px); raro
+} */
+@keyframes latido {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+}
+
+.latido {
+  display: inline-block;
+  animation: latido 2s infinite;
+}
+
+@media (max-width: 1099px) {
+  .body-grid {
+    display: flex;
+    gap: 0;
+    flex-direction: column;
+  }
+}
+
+.greenyellow {
+  background: greenyellow;
+}
+.card-time {
+  border-radius: 20px;
+}
+
+.redcolor {
+  background: rgb(153, 1, 1);
+}
+
+
+.mantine-1hwiwhc {
+  color: rgba(255, 255, 255, 0.514);
+}
+
+.mantine-doiomh:hover {
+  background-color: #020801c5;
+}
+.mantine-Drawer-body,
+.mantine-Drawer-header {
+  background-color: rgb(54 95 150 / 1) !important;
+}
+.error-login {
+  color: white;
+}
+/* .m_57492dcc {
+  color: rgb(237, 237, 237) !important;
+} */
+.m_9e365f20 {
+  color: #fbde00 !important;
+  font-size: 0.9rem !important;
+  font-weight: bold;
+}
+.cursor-pointer-login {
+  cursor: pointer !important;
+  text-decoration: solid !important;
+}
+.container-card {
+  border: 2px solid #0000002e;
+  width: max-content;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.datos-use-card svg {
+  color: #ffc800;
+}
+.m_9e365f20 {
+  font-size: 0.8rem !important;
+}
+.lista-user-diver span {
+  font-size: 0.6rem !important;
+}
+.mantine-162lpqd {
+  color: white;
+} 
+.m_57492dcc{
+  color: #ffe700cc !important;
+}
+.m_f0824112:where([data-active], [aria-current='page']) .m_57492dcc{
+  color: #f5f5f5cc !important;
+}
+@media (hover: hover) {
+  :where([data-mantine-color-scheme="light"]) .m_f0824112:hover {
+    background-color: #171717ba !important;
+  }
+}
