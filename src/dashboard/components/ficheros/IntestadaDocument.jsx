@@ -22,7 +22,6 @@ const IntestadaDocument = ({
   const handleChange = async (id, value) => {
     
     const updateState = await dataApi.updateStatus(token, value, id);
-    console.log(updateState,141888);
     
     // await dataApi.getValidCita(token, dSection);
     const data = await dataApi.getUserDocumentSection(
@@ -37,10 +36,6 @@ const IntestadaDocument = ({
     setDocumentUser(data);
 
     setVerified(allVerified);
-    if (allVerified) {
-      setRefresh(true);
-      return;
-    }
     setRefresh(allInProcess);
   };
 

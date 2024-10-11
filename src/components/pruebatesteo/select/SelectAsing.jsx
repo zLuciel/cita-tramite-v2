@@ -2,13 +2,16 @@ import { MultiSelect, Group, Text, Badge } from "@mantine/core";
 import { useState } from "react";
 
 const renderMultiSelectOption = ({ option }) => {
+  console.log(option, "viendo si hay");
+
+  // Filtramos por status que sea "CORREGIDO" o "COMPLETO"
+  const sumando = option?.statusCounts
+    .filter((item) => item.status === "CORREGIDO" || item.status === "COMPLETO")
+    .reduce((sum, item) => sum + parseInt(parseInt(item.count), 10), 0); 
   return (
-    <div
-      className="flex gap-3 justify-center items-center"
-      gap="sm"
-    >
+    <div className="flex gap-3 justify-center items-center" gap="sm">
       <Badge fullWidth color="red">
-        2000
+        {sumando}
       </Badge>
       <p
         style={{
@@ -26,7 +29,6 @@ const renderMultiSelectOption = ({ option }) => {
 };
 
 function SelectAsing({ dataSelect, handleSectionAsing, selectValue, idUser }) {
-
   return (
     <MultiSelect
       data={dataSelect}

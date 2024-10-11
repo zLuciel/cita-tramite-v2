@@ -35,20 +35,18 @@ export default function TableAsignacion({ allUser, dataSelect, nameSection }) {
 
   const handleSectionAsing = async (sectionId, idUser) => {
     const veryNewSet = memoryGetPermiss.length < sectionId.length;
-
+    notifications.show({
+      id: 7,
+      withCloseButton: true,
+      autoClose: false,
+      title: `Cargando...`,
+      message: "",
+      color: "green",
+      className: "",
+      loading: true,
+    });
     //si es eliminar
     if (!veryNewSet) {
-      notifications.show({
-        id: 7,
-        withCloseButton: true,
-        autoClose: false,
-        title: `Cargando...`,
-        message: "",
-        color: "green",
-        className: "",
-        loading: true,
-      });
-
       const deleteFilter = memoryGetPermiss
         .filter((item) => !sectionId.includes(item.section.id))
         .map((item) => item.id); // Filtramos los que no están en arrayIds

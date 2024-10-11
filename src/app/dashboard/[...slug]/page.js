@@ -96,12 +96,11 @@ const Page = ({ params }) => {
   }
 
   const handleSkipUser = () => {
-    setRefresh(false)
+    setRefresh(false);
     setDocumentUser([]);
     router.back();
   };
 
- 
   return (
     <>
       <div className="">
@@ -112,8 +111,7 @@ const Page = ({ params }) => {
             <div>
               <div className="mb-4">
                 <h1 className="text-2xl font-bold mb-3">
-                  DOCUMENTOS{" "}
-                  {documentUser[0]?.section.sectionName}
+                  DOCUMENTOS {documentUser[0]?.section.sectionName}
                 </h1>
                 <span className="flex gap-2">
                   <h3 className="uppercasse font-bold text-[blue] ">
@@ -141,15 +139,30 @@ const Page = ({ params }) => {
               />
               {!citaQuery && (
                 <div className="mt-4 flex gap-3 items-center justify-center">
-                  <Tooltip
-                    label={
-                      refresh
-                        ? "Atienda primero a este cliente"
-                        : "Ya puede ver el siguiente"
-                    }
-                  >
+                  {!noPendiente && (
+                    <Tooltip
+                      label={
+                        refresh
+                          ? "Atienda primero a este cliente"
+                          : "Ya puede ver el siguiente"
+                      }
+                    >
+                      <Button
+                        disabled={refresh}
+                        onClick={handleSkipUser}
+                        rightSection={
+                          <FaPersonWalkingArrowRight
+                            style={{ color: "white" }}
+                            size={20}
+                          />
+                        }
+                      >
+                        SIGUIENTE ADMINISTRADO
+                      </Button>
+                    </Tooltip>
+                  )}
+                  {noPendiente && (
                     <Button
-                      disabled={refresh}
                       onClick={handleSkipUser}
                       rightSection={
                         <FaPersonWalkingArrowRight
@@ -160,7 +173,7 @@ const Page = ({ params }) => {
                     >
                       SIGUIENTE ADMINISTRADO
                     </Button>
-                  </Tooltip>
+                  )}
                 </div>
               )}
             </div>

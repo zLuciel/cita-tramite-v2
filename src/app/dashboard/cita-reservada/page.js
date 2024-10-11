@@ -18,7 +18,7 @@ const Page = () => {
     }
     getCita()
    },[user.token,refresh])
-
+  
   return (
     <div className="">
       {<Movil role={"super user"} />}

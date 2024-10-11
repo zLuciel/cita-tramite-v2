@@ -146,6 +146,7 @@ const FileGroupFollow = ({
     }
 
     if (!validatePdf(fileConvert)) {
+      setLoadingFile(false);
       notifications.update({
         id: idFile,
         withCloseButton: true,

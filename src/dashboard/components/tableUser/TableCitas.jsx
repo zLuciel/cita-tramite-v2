@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 
 export default function TablesCita({ allUser,setRefresh = false,refresh = false }) {
   const [rows, setRows] = React.useState([]);
+  const [message,setMessage] = React.useState(null)
   const [opened, { open, close }] = useDisclosure(false);
   const router = useRouter()
 
@@ -29,12 +30,14 @@ export default function TablesCita({ allUser,setRefresh = false,refresh = false 
         reservedById: appointment.reservedBy.id,
         sectionName: appointment.section.sectionName,
         timeCita: `${appointment.schedule.startTime} - ${appointment.schedule.endTime}`,
+        message: appointment.message,
       }));
       setRows(transformedRows);
     }
   }, [allUser]);
  
-  const handleReprogramarClick = (sectionId, reservedById) => () => {
+  const handleReprogramarClick = (sectionId, reservedById,message) => () => {
+    setMessage(message)
     // setIdSection(sectionId); // Guarda el sectionId seleccionado
     // setIdUserParams(reservedById); // Guarda el reservedById seleccionado
     // setRefresh(!refresh)
@@ -67,7 +70,7 @@ export default function TablesCita({ allUser,setRefresh = false,refresh = false 
       headerName: "Reprogramar cita",
       cellClassName: "reprogramar",
       width: 200,
-      getActions: ({ id, row }) => [
+      getActions: ({ id, row,}) => [
         // <GridActionsCellItem
         //   key={id}
         //   icon={<IoEyeSharp />}
@@ -75,7 +78,8 @@ export default function TablesCita({ allUser,setRefresh = false,refresh = false 
         //   onClick={handleInformationClick(row.sectionId, row.reservedById)}
         // />,
         <Button
-          onClick={handleReprogramarClick(row.sectionId, row.reservedById)}
+          disabled={row.message === null ? true : false }
+          onClick={handleReprogramarClick(row.sectionId, row.reservedById,row.message)}
           key={id}
           variant="gradient"
           gradient={{ from: "red", to: "pink", deg: 90 }}
@@ -118,8 +122,8 @@ export default function TablesCita({ allUser,setRefresh = false,refresh = false 
   return (
     <>
       <Box sx={{ width: "100%", height: "100%", overflow: "auto" }}>
-        <Modal opened={opened} onClose={close} title="" centered>
-          VER MENSAJE DEL USUARIO
+        <Modal opened={opened} onClose={close} title="Mensaje de reprogramación recibido" centered>
+          {message}
         </Modal>
         <DataGrid
           autoHeight

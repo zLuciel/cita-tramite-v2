@@ -31,9 +31,14 @@ const Requisito = ({ dataDocument, inestadaReq }) => {
         user.token,
         idDocument
       );
+      console.log(res, "viendo error");
+
       setCompletFileInput(CompletFileInput);
       setMemoryProcess(CompletFileInput);
-      if (res.status === "COMPLETO"  || res.status === "VERIFICADO") setActive(3);
+      if (
+        res?.status !== "INCOMPLETO" 
+      )
+        setActive(3);
     };
     verifyFileUser();
   }, [countFile, idDocument, user.token]);

@@ -22,7 +22,7 @@ const ButtonUpdate = ({
   idDocument,
   setCompletFileInput,
   setMemoryProcess,
-  updateVery
+  updateVery,
 }) => {
   const url = "https://xynydxu4qi.us-east-2.awsapprunner.com/api/files/pdf";
   const { user } = useProduct();
@@ -60,15 +60,15 @@ const ButtonUpdate = ({
 
     if (fileConvert.type === "application/pdf" && validatePdf(fileConvert)) {
       try {
-        const veryupdateFile = updateVery ? "update" : ""
-        const idCondition = updateVery ? updateVery.id : idFileInput
-        
+        const veryupdateFile = updateVery ? "update" : "";
+        const idCondition = updateVery ? updateVery.id : idFileInput;
+
         const res = await dataApi.postFileOne(
           user.token,
           fileConvert,
           typeId,
           veryupdateFile,
-          idCondition 
+          idCondition
         );
 
         // setFilePdf(res.fileUrl);

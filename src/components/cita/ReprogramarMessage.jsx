@@ -22,8 +22,9 @@ function ReprogramarMessage({ id, token }) {
       loading: true,
     });
 
-    const res = await dataApi.updateMessageCite(token,idCita, details);
-    if (res.details) {
+    const res = await dataApi.updateMessageCite(token, id, details);
+
+    if (res.id) {
       notifications.update({
         id: id,
         withCloseButton: true,
@@ -40,18 +41,30 @@ function ReprogramarMessage({ id, token }) {
   };
   return (
     <>
-      <Modal opened={opened} onClose={close} title="Detalle el motivo de la reprogramación.">
+      <Modal
+        opened={opened}
+        onClose={close}
+        title="Detalle el motivo de la reprogramación."
+      >
         <Textarea
           label="Escriba aqui su detalle"
           placeholder="..."
           onChange={(event) => setDetails(event.currentTarget.value)}
         />
-        <Button className="mt-4" variant="filled" color="red" fullWidth onClick={handleDetail}>
+        <Button
+          className="mt-4"
+          variant="filled"
+          color="red"
+          fullWidth
+          onClick={handleDetail}
+        >
           ENVIAR MENSAJE
         </Button>
       </Modal>
 
-      <Button onClick={open}>REPROGRAMAR</Button>
+      <Button onClick={open} color="red">
+        REPROGRAMAR
+      </Button>
     </>
   );
 }

@@ -72,8 +72,7 @@ const Page = () => {
           user.token,
           idSuper,
           selectedDate
-        );
-        console.log(getTimes, 1418);
+        )
 
         // Obtener todos los IDs de horarios
         const idsToDisable = getTimes.map((item) => item.schedule.id);
@@ -97,6 +96,18 @@ const Page = () => {
   }, [idSuper, selectedDate, user.token]);
 
   const handleCreateCita = async () => {
+
+    notifications.show({
+      id: id,
+      withCloseButton: true,
+      autoClose: false,
+      title: "Creando cita espere...",
+      message: "",
+      color: "green",
+      // icon: <FaFilePdf />,
+      className: "my-notification-class",
+      loading: true,
+    });
     const res = await dataApi.getCreateCita(
       user.token,
       id,
@@ -109,7 +120,7 @@ const Page = () => {
     const verifyCita = await dataApi.verifyCita(user.token, id);
 
     if (res.status === "PENDING") {
-      notifications.show({
+      notifications.update({
         id: id,
         withCloseButton: true,
         autoClose: 3000,
@@ -124,7 +135,7 @@ const Page = () => {
       router.back()
     }
     if (res.ok) {
-      notifications.show({
+      notifications.update({
         id: id,
         withCloseButton: true,
         autoClose: 3000,

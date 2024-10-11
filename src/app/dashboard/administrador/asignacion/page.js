@@ -24,6 +24,7 @@ const Page = () => {
     const dataSection = allDocumets.map((section) => ({
       value: section.sectionId,
       label: `${section.sectionName}`,
+      statusCounts:section.statusCounts
     }));
     setDataSelect(dataSection);
     dispatch(getAllPlataform({ token: user.token }));

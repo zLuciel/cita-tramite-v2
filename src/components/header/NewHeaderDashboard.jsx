@@ -1,6 +1,6 @@
 import { Badge, Box, Divider, NavLink } from "@mantine/core";
 import Link from "next/link";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 
 import { usePathname } from "next/navigation";
 
@@ -45,22 +45,30 @@ const followNav = [
     link: "/dashboard/cita-reservada",
     slug: "cita-reservada",
   },
-  {
-    icon: BsCalendarXFill,
-    label: "LISTA DE CITAS NO ASIGNADAS",
-    description: "Documentos verificados, pero aún no se ha asignado una cita.",
-    link: "/dashboard/cita-reservada-no-asignada",
-    slug: "cita-reservada-no-asignada",
-  },
 ];
 
 const NewHeaderDashboard = ({ Followid }) => {
   const { user, setDocumentSection, documentSection } = useProduct();
   const [countProcess, setCountProcess] = useState(0);
+  const [countPendient, setCountPendient] = useState(0);
   const pathname = usePathname();
   const arrayPathname = pathname.split("/");
   const slug = arrayPathname[arrayPathname.length - 1];
+ 
 
+
+  useEffect(() => {
+    const totalCount = documentSection.reduce((acc, item) => {
+      const completeStatus = item.statusCounts.filter(status => status.status === "COMPLETO");
+
+      const completeCount = completeStatus.reduce((sum, status) => sum + parseInt(status.count, 10), 0);
+
+      return acc + completeCount;
+    }, 0);
+
+    setCountProcess(totalCount);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   // Usa useMemo para memorizar el cálculo de items y pendientes
   const documentNew = useMemo(() => {
     return documentSection.map((data, index) => ({
@@ -91,14 +99,7 @@ const NewHeaderDashboard = ({ Followid }) => {
           const WithCompleteStatus = item.statusCounts.find(
             (itemStatus) => itemStatus.status === "COMPLETO"
           );
-          const totalCompleteCount = item.statusCounts
-            .filter((itemStatus) => itemStatus.status === "COMPLETO") // Filtrar los que tienen status COMPLETO
-            .reduce(
-              (sum, itemStatus) => sum + parseInt(itemStatus.count, 10),
-              0
-            );
-
-          setCountProcess(totalCompleteCount);
+          
           return (
             <Link
               href={`${item.link}${item.sectionSlug}-nuevos?idnuevo=${item.sectionId}`}
@@ -136,6 +137,22 @@ const NewHeaderDashboard = ({ Followid }) => {
       const WithCompleteStatusOb = item.statusCounts.find(
         (itemStatus) => itemStatus.status === "OBSERVADO"
       );
+
+      const WithCompleteStatusPend = item.statusCounts.find(
+        (itemStatus) => itemStatus.status === "CORREGIDO"
+      );
+
+      const veriPend =
+        WithCompleteStatusPend?.count === undefined
+          ? 0
+          : WithCompleteStatusPend?.count;
+      const veriOb =
+        WithCompleteStatusOb?.count === undefined
+          ? 0
+          : WithCompleteStatusOb?.count;
+
+      const countMax = parseInt(veriPend) + parseInt(veriOb);
+
       return (
         <Link
           href={`${item.link}${item.sectionSlug}-pendientes?idpendiente=${item.sectionId}`}
@@ -146,7 +163,19 @@ const NewHeaderDashboard = ({ Followid }) => {
               `${item.sectionSlug}-pendientes-corregido` === slug ||
               `${item.sectionSlug}-pendientes-no-corregido` === slug
             }
-            label={item.sectionName}
+            label={
+              <div className="flex gap-3">
+                {item.sectionName}
+                <Badge
+                  variant="gradient"
+                  gradient={{ from: "blue", to: "violet", deg: 90 }}
+                  size="md"
+                  circle
+                >
+                  {countMax || 0}
+                </Badge>
+              </div>
+            }
             description={item.description}
             leftSection={<item.icon size="1rem" stroke={1.5} />}
             color="lime"
@@ -157,7 +186,19 @@ const NewHeaderDashboard = ({ Followid }) => {
             >
               <NavLink
                 active={`${item.sectionSlug}-pendientes-corregido` === slug}
-                label="PENDIENTE YA CORREGIDOS"
+                label={
+                  <div className="flex gap-3">
+                    PENDIENTE YA CORREGIDOS{" "}
+                    <Badge
+                      variant="gradient"
+                      gradient={{ from: "blue", to: "violet", deg: 90 }}
+                      size="md"
+                      circle
+                    >
+                      {WithCompleteStatusPend?.count || 0}
+                    </Badge>
+                  </div>
+                }
                 description="Documentos que el usuario ya corrigió"
                 color="lime"
               />
@@ -188,36 +229,21 @@ const NewHeaderDashboard = ({ Followid }) => {
         </Link>
       );
     });
-  }, [documentNew, slug]); // Dependencias
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug, documentNew]); // Dependencias
 
   const follows = useMemo(() => {
     return (
-      // <Link href={`${item.link}`} key={"cita-reservada"}>
-      <NavLink
-        active={
-          slug === "cita-reservada" || "cita-reservada-no-asignada" === slug
-        }
-        label={"SECCIÓN DE CITAS"}
-        description={"Citas asignadas o citas por asignar"}
-        leftSection={<BsCalendar2DateFill />}
-        color="lime"
-        variant="filled"
-      >
-        {" "}
-        {followNav.map((item, index) => (
-          <Link href={`${item.link}`} key={index}>
-            <NavLink
-              active={slug === item.slug}
-              label={item.label}
-              description={item.description}
-              leftSection={<item.icon size="1rem" stroke={1.5} />}
-              color="lime"
-              variant="subtle"
-            />
-          </Link>
-        ))}
-      </NavLink>
-      // </Link>
+      <Link href={`/dashboard/cita-reservada`}>
+        <NavLink
+          active={slug === "cita-reservada"}
+          label={"LISTA DE CITAS RESERVADAS"}
+          description={"Visualizar todas las citas reservadas."}
+          leftSection={<BsCalendar2DateFill />}
+          color="lime"
+          variant="filled"
+        />
+      </Link>
     );
   }, [slug]); // Dependencias
 
@@ -264,12 +290,12 @@ const NewHeaderDashboard = ({ Followid }) => {
       <div className="w-full">
         {user.token && (
           <div className="w-full">
-            <Divider
+            {/* <Divider
               className="lista-user-diver"
               my="md"
               label={<Link href={"/dashboard"}>LISTA USUARIOS</Link>}
               labelPosition="center"
-            />
+            /> */}
             <Logout />
           </div>
         )}
