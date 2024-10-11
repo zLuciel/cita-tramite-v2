@@ -5,7 +5,7 @@ import dataApi from "@/data/fetchData";
 import { FaRegStickyNote } from "react-icons/fa";
 import { notifications } from "@mantine/notifications";
 
-function ReprogramarMessage({ id, token,message }) {
+function ReprogramarMessage({ id, token, message }) {
   const [opened, { open, close }] = useDisclosure(false);
   const [details, setDetails] = useState(null);
 
@@ -23,7 +23,14 @@ function ReprogramarMessage({ id, token,message }) {
     });
 
     const res = await dataApi.updateMessageCite(token, id, details);
-
+    console.log({
+      token,
+      id,
+      details
+    });
+    
+    console.log(res,"enviando mensaje");
+    
     if (res.id) {
       notifications.update({
         id: id,
@@ -39,8 +46,7 @@ function ReprogramarMessage({ id, token,message }) {
     }
     close();
   };
-
-  console.log(message,"viendo mensaje");
+  console.log(message,"viendo message");
   
   return (
     <>
@@ -65,12 +71,18 @@ function ReprogramarMessage({ id, token,message }) {
         </Button>
       </Modal>
 
-      {(message === null || message === "" )&& <Button onClick={open} color="red" disabled={(message === null || message === "") ? false : true} >
-        REPROGRAMAR
-      </Button>}
-      {(message !== null )&& <Button color="green" >
-        SU MENSAJE FUE ENVIADO
-      </Button>}
+      {(message === null || message === "" || message === undefined) && (
+        <Button
+          onClick={open}
+          color="red"
+          disabled={message === null || message === "" || message === undefined ? false : true}
+        >
+          REPROGRAMAR
+        </Button>
+      )}
+      {message !== null || message !== undefined && (
+        <Button color="green">SU MENSAJE FUE ENVIADO</Button>
+      )}
     </>
   );
 }

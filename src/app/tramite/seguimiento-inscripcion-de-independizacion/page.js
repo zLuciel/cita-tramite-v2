@@ -57,7 +57,8 @@ const Page = () => {
         setFilesArray(data);
         const validCitaFetch = await dataApi.getValidCita(token, id);
         const veryReserva = await dataApi.verifyCita(token, id);
-
+        console.log(veryReserva,"viendo reserva");
+        
         setValidCita(validCitaFetch);
         if (
           statusComplete?.status === "INCOMPLETO" ||
@@ -195,7 +196,7 @@ const Page = () => {
                 )}
                 {validCita?.processStatus?.status === "CITA_PROGRAMADA" && (
                   <ReprogramarMessage
-                    id={idVeryCite.idCita}
+                    id={idVeryCite.idcita}
                     message={idVeryCite.message}
                     token={user.token}
                   />
