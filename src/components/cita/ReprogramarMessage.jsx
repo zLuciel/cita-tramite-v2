@@ -5,7 +5,7 @@ import dataApi from "@/data/fetchData";
 import { FaRegStickyNote } from "react-icons/fa";
 import { notifications } from "@mantine/notifications";
 
-function ReprogramarMessage({ id, token }) {
+function ReprogramarMessage({ id, token,message }) {
   const [opened, { open, close }] = useDisclosure(false);
   const [details, setDetails] = useState(null);
 
@@ -39,6 +39,9 @@ function ReprogramarMessage({ id, token }) {
     }
     close();
   };
+
+  console.log(message,"viendo mensaje");
+  
   return (
     <>
       <Modal
@@ -62,9 +65,12 @@ function ReprogramarMessage({ id, token }) {
         </Button>
       </Modal>
 
-      <Button onClick={open} color="red">
+      {(message === null || message === "" )&& <Button onClick={open} color="red" disabled={message === null || message === ""} >
         REPROGRAMAR
-      </Button>
+      </Button>}
+      {(message.length > 0 )&& <Button color="green" >
+        SU MENSAJE FUE ENVIADO
+      </Button>}
     </>
   );
 }

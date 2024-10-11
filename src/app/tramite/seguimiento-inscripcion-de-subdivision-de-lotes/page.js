@@ -15,6 +15,7 @@ import ButtonFollow from "@/components/buttons/ButtonFollow";
 import Username from "@/components/username/Username";
 import LodingFile from "@/components/loading/LodingFile";
 import CountdownTwoWeeks from "@/components/cita/CountdownTwoWeeks";
+import ReprogramarMessage from "@/components/cita/ReprogramarMessage";
 
 // 0 en processo
 // 1 SUBSANAR DOCUMENTOS
@@ -24,7 +25,7 @@ import CountdownTwoWeeks from "@/components/cita/CountdownTwoWeeks";
 const Page = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  const router = useRouter()
+  const router = useRouter();
   const { user } = useProduct();
   const [view, setView] = useState(0);
   const [mixto, setMixto] = useState(0);
@@ -33,12 +34,12 @@ const Page = () => {
   const [status, setStatus] = useState(0);
   const [loading, setLoading] = useState(true);
   const [refresh, setRefresh] = useState(false);
-  const [stateOk, setEstadoOk] = useState({});
   const [files, setFiles] = useState({}); // era objeto
-  const [loadingFile, setLoadingFile] = useState(false);
-  const [statusComplete, setStatusComplete] = useState({}); // VERIFICAR SI COMPLETO ANTES SUS DCOUMENTOS
-
   const matches = useMediaQuery("(min-width: 1099px)");
+  const [loadingFile, setLoadingFile] = useState(false);
+  const [idVeryCite, setVeryCiteid] = useState(null);
+  const [stateOk, setEstadoOk] = useState({});
+  const [statusComplete, setStatusComplete] = useState({});
   const allTrue =
     Object.keys(stateOk).length > 0 &&
     Object.values(stateOk).every((value) => value === true);
@@ -48,12 +49,14 @@ const Page = () => {
     const fetchFile = async (id, token) => {
       try {
         const resVeryStatus = await dataApi.getProcessFile(token, id);
-
         setStatusComplete(resVeryStatus);
         const data = await dataApi.getFilesUser(id, token);
         setFilesArray(data);
         const validCitaFetch = await dataApi.getValidCita(token, id);
         const veryReserva = await dataApi.verifyCita(token, id);
+
+        // console.log(validCitaFetch, "validacton");
+        
         setValidCita(validCitaFetch);
         if (
           statusComplete?.status === "INCOMPLETO" ||
@@ -78,10 +81,12 @@ const Page = () => {
           setMixto(6);
         }
 
-        if (veryReserva.ok) setView(4);
+        if (veryReserva.ok) {
+          setVeryCiteid(veryReserva.appointment.id)
+          setView(4)}
       } finally {
-        setLoadingFile(false);
         setLoading(false);
+        setLoadingFile(false);
       }
     };
     fetchFile(id, user.token);
@@ -94,13 +99,13 @@ const Page = () => {
     setMixto(1);
   };
 
+  const handleViewCita = (id) => {
+    window.open(`/confirmacion-de-cita?id=${id}`, "_blank");
+  };
+
   const handleRefresh = () => {
     setFiles({});
     setRefresh(!refresh);
-  };
-
-  const handleViewCita = (id) => {
-    window.open(`/confirmacion-de-cita?id=${id}`, "_blank");
   };
 
   const handleCita = (id) => {
@@ -112,13 +117,22 @@ const Page = () => {
       <div className="body-grid">
         {!matches && <Movil Followid={id} />}
         {matches && <Header Followid={id} />}
-        <main className="bg-white">
+        <main className="bg-white relative">
           {loadingFile && <LodingFile />}
+          {validCita?.processStatus?.status === "VERIFICADO" && mixto !== 0 && (
+            <CountdownTwoWeeks
+              startDate={validCita?.processStatus?.updatedAt}
+            />
+          )}
           {matches && (
             <Username firstName={user.firstName} lastName={user.lastName} />
           )}
           <div className="px-10 py-4">
-          {validCita?.processStatus?.status === "VERIFICADO" && <CountdownTwoWeeks startDate={validCita?.processStatus?.updatedAt} />}
+            {validCita?.processStatus?.status === "VERIFICADO" && validCita?.processStatus?.status !== "CITA_PROGRAMADA" && (
+              <CountdownTwoWeeks
+                startDate={validCita?.processStatus?.updatedAt}
+              />
+            )}
             {(view == 0 || view == 3) && (
               <h1 className="text-2xl font-bold mb-4">
                 SEGUIMIENTO DE TRÁMITE
@@ -131,10 +145,11 @@ const Page = () => {
             )}
             <FileGroupFollow
               statusComplete={statusComplete}
+              loadingFile={loadingFile}
+              setLoadingFile={setLoadingFile}
               stateOk={stateOk}
               setEstadoOk={setEstadoOk}
               files={files}
-              setLoadingFile={setLoadingFile}
               setFiles={setFiles}
               loading={loading}
               setView={setView}
@@ -162,22 +177,26 @@ const Page = () => {
                   handleFunction={() => handleRefresh()}
                 />
               )}
-              {view == 4 && mixto == 0 && (
-                <Button
-                  onClick={() => handleViewCita(id)}
-                  className="self-end"
-                  color="indigo"
-                >
-                  VER CITA
-                </Button>
-              )}
-              {view == 3 && (validCita?.processStatus?.status === "VERIFICADO") && (
-                <ButtonFollow
-                  handleFunction={() => handleCita(id)}
-                  color="indigo"
-                  text={"SOLICITAR CITA"}
-                />
-              )}
+              <div className="flex gap-3">
+                {view == 4 && mixto == 0 && (
+                  <Button
+                    onClick={() => handleViewCita(id)}
+                    className="self-end"
+                    color="indigo"
+                  >
+                    VER CITA
+                  </Button>
+                )}
+                {validCita?.processStatus?.status === "CITA_PROGRAMADA" && <ReprogramarMessage id={idVeryCite} token={user.token} />}
+              </div>
+              {view == 3 &&
+                validCita?.processStatus?.status === "VERIFICADO" && (
+                  <ButtonFollow
+                    handleFunction={() => handleCita(id)}
+                    color="indigo"
+                    text={"SOLICITAR CITA"}
+                  />
+                )}
             </div>
           </div>
         </main>

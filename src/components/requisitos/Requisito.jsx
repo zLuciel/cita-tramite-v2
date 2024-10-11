@@ -35,9 +35,7 @@ const Requisito = ({ dataDocument, inestadaReq }) => {
 
       setCompletFileInput(CompletFileInput);
       setMemoryProcess(CompletFileInput);
-      if (
-        res?.status !== "INCOMPLETO" 
-      )
+      if (res?.status !== 'INCOMPLETO' && (!res?.statusCode || res.statusCode !== 404))
         setActive(3);
     };
     verifyFileUser();
