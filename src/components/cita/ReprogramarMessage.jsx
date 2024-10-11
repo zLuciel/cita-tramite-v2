@@ -65,10 +65,10 @@ function ReprogramarMessage({ id, token,message }) {
         </Button>
       </Modal>
 
-      {(message === null || message === "" )&& <Button onClick={open} color="red" disabled={message === null || message === ""} >
+      {(message === null || message === "" )&& <Button onClick={open} color="red" disabled={(message === null || message === "") ? false : true} >
         REPROGRAMAR
       </Button>}
-      {(message.length > 0 )&& <Button color="green" >
+      {(message !== null )&& <Button color="green" >
         SU MENSAJE FUE ENVIADO
       </Button>}
     </>
