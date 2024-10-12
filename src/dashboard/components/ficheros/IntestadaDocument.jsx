@@ -7,6 +7,7 @@ import { FaFilePdf } from "react-icons/fa6";
 import ModalObservadoText from "../observado/ModalObservadoText";
 import { useProduct } from "@/provider/ProviderContext";
 
+
 const IntestadaDocument = ({
   documentUser,
   token,
@@ -17,12 +18,13 @@ const IntestadaDocument = ({
   setVerified,
 }) => {
   const { setDocumentUser } = useProduct();
+  const {selectValue,setSelectValue} = [""]
+
   const url = "https://xynydxu4qi.us-east-2.awsapprunner.com/api/files/pdf";
 
   const handleChange = async (id, value) => {
-    
     const updateState = await dataApi.updateStatus(token, value, id);
-    
+
     // await dataApi.getValidCita(token, dSection);
     const data = await dataApi.getUserDocumentSection(
       token,
@@ -43,9 +45,7 @@ const IntestadaDocument = ({
     <div className="flex flex-col gap-3">
       {documentUser?.map((getfile, index) => (
         <div key={index} className="flex flex-col gap-2 w-full">
-          <h3 className="font-semibold">
-            {getfile.typeDocument.name}
-          </h3>
+          <h3 className="font-semibold">{getfile.typeDocument.name}</h3>
           <div className="flex gap-3 w-full">
             <Input
               className="w-full"
@@ -54,6 +54,7 @@ const IntestadaDocument = ({
             />
             {!email && (
               <Select
+              className={`${getfile.status === "EN PROCESO" ? "bg-blue-select" : getfile.status === "VERIFICADO" ? "bg-green-select" : "bg-red-select"}`}
                 data={["EN PROCESO", "VERIFICADO", "OBSERVADO"]}
                 value={getfile.status}
                 allowDeselect={false}

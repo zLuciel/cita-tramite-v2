@@ -25,6 +25,7 @@ const Page = () => {
   const [disable, setDisable] = useState(true);
   const [loading, setLoading] = useState(true);
   const [refresh, setRefresh] = useState(false);
+  const [timeInitial, setTimeInitial] = useState(false);
   const matches = useMediaQuery("(min-width: 1099px)");
   const searchParams = useSearchParams();
   const router = useRouter()
@@ -32,6 +33,10 @@ const Page = () => {
 
   useEffect(() => {
     const getAdmi = async () => {
+      const validCitaFetch = await dataApi.getValidCita(user.token, id);
+      setTimeInitial(validCitaFetch?.processStatus?.updatedAt)
+      console.log(validCitaFetch,141414);
+      
       try {
         const resSuper = await dataApi.getSuperUser(user.token, id);
         const resHorario = await dataApi.getTimeCita(user.token);
@@ -118,7 +123,8 @@ const Page = () => {
 
     //todo valida si ya tiene cita de verdad
     const verifyCita = await dataApi.verifyCita(user.token, id);
-
+    
+    
     if (res.status === "PENDING") {
       notifications.update({
         id: id,
@@ -186,6 +192,7 @@ const Page = () => {
                   />
                 </div>
                 <Calendary
+                 initialDate = {timeInitial}
                   setIdTime={setIdTime}
                   selectedDate={selectedDate}
                   setSelectedDate={setSelectedDate}

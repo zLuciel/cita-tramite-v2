@@ -23,14 +23,7 @@ function ReprogramarMessage({ id, token, message }) {
     });
 
     const res = await dataApi.updateMessageCite(token, id, details);
-    console.log({
-      token,
-      id,
-      details
-    });
-    
-    console.log(res,"enviando mensaje");
-    
+
     if (res.id) {
       notifications.update({
         id: id,
@@ -46,8 +39,8 @@ function ReprogramarMessage({ id, token, message }) {
     }
     close();
   };
-  console.log(message,"viendo message");
-  
+
+
   return (
     <>
       <Modal
@@ -75,12 +68,16 @@ function ReprogramarMessage({ id, token, message }) {
         <Button
           onClick={open}
           color="red"
-          disabled={message === null || message === "" || message === undefined ? false : true}
+          disabled={
+            message === null || message === "" || message === undefined
+              ? false
+              : true
+          }
         >
           REPROGRAMAR
         </Button>
       )}
-      {message.length > 0 && (
+      {message?.length > 0 && (
         <Button color="green">SU MENSAJE FUE ENVIADO</Button>
       )}
     </>

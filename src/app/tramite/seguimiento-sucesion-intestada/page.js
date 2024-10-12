@@ -57,7 +57,7 @@ const Page = () => {
         setFilesArray(data);
         const validCitaFetch = await dataApi.getValidCita(token, id);
         const veryReserva = await dataApi.verifyCita(token, id);
-        console.log(veryReserva,"viendo reserva");
+       
         
         setValidCita(validCitaFetch);
         if (
@@ -125,11 +125,11 @@ const Page = () => {
         {matches && <Header Followid={id} />}
         <main className="bg-white relative">
           {loadingFile && <LodingFile />}
-          {validCita?.processStatus?.status === "VERIFICADO" && mixto !== 0 && (
+          {/* {validCita?.processStatus?.status === "VERIFICADO" && mixto !== 0 && (
             <CountdownTwoWeeks
               startDate={validCita?.processStatus?.updatedAt}
             />
-          )}
+          )} */}
           {matches && (
             <Username firstName={user.firstName} lastName={user.lastName} />
           )}

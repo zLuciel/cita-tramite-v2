@@ -238,3 +238,21 @@ main {
     background-color: #171717ba !important;
   }
 }
+
+/*select color*/
+.bg-blue-select input{
+  background: linear-gradient(90deg, var(--mantine-color-blue-filled) 0%, var(--mantine-color-cyan-filled) 100%) !important;
+  color: white !important;
+}
+.bg-green-select input{
+  background: linear-gradient(90deg, var(--mantine-color-lime-filled) 0%, var(--mantine-color-green-filled) 100%) !important;
+  color: white !important;
+}
+.bg-red-select input{
+  background: linear-gradient(90deg, var(--mantine-color-red-filled) 0%, var(--mantine-color-pink-filled) 100%) !important;
+  color: white !important;
+}
+
+.bg-blue-select svg,.bg-green-select svg,.bg-red-select svg{
+  color: white !important;
+}
