@@ -67,8 +67,9 @@ const NewHeaderDashboard = ({ Followid }) => {
     }, 0);
 
     setCountProcess(totalCount);
+    
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [documentSection]);
   // Usa useMemo para memorizar el cálculo de items y pendientes
   const documentNew = useMemo(() => {
     return documentSection.map((data, index) => ({
