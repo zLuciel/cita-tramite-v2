@@ -54,22 +54,16 @@ export default function TablesUser({
           },
         ]
       : []),
-    { field: "dni", headerName: "DNI", width: 150, editable: false },
+    { field: "documentNumber", headerName: "DNI", width: 150, editable: false },
     { field: "firstName", headerName: "Nombres", width: 150, editable: false },
-    { field: "lastName", headerName: "Apellidos", width: 150, editable: false },
+    { field: "apellido_paterno", headerName: "Apellidos Paterno", width: 150, editable: false },
+    { field: "apellido_materno", headerName: "Apellidos Materno", width: 150, editable: false },
     {
-      field: "birthDate",
-      headerName: "F. Nacimiento",
-      width: 150,
-      editable: false,
-    },
-    {
-      field: "department",
-      headerName: "Departamento",
+      field: "address",
+      headerName: "Dirección",
       width: 200,
       editable: false,
     },
-    { field: "province", headerName: "Provincia", width: 150, editable: false },
     { field: "district", headerName: "Distrito", width: 150, editable: false },
     {
       field: "mobileNumber",

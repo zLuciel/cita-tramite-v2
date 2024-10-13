@@ -24,7 +24,7 @@ const Page = () => {
         {matches && <Header />}
         <main className="bg-white w-full relative">
           {matches && (
-            <Username firstName={user.firstName} lastName={user.lastName} />
+            <Username firstName={user.firstName} paterno={user.apellido_paterno} materno={user.apellido_materno} />
           )}
           <Requisito inestadaReq={true} dataDocument={fetDataSlug} />
         </main>

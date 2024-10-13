@@ -16,6 +16,24 @@ import {
   getAllPedingUnresolved,
 } from "@/redux/dashboard/actions";
 
+import { useQuery } from '@tanstack/react-query';
+
+const fetchAllNewTables = async ({ token, idSection }) => {
+  const url = "https://xynydxu4qi.us-east-2.awsapprunner.com";
+  const response = await fetch(`${url}/api/process-status/completed-users/${idSection}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error ${response.status}: ${response.statusText}`);
+  }
+
+  return response.json();
+};
+
 const Page = ({ params }) => {
   const { user } = useProduct();
   const searchParams = useSearchParams();
@@ -27,32 +45,30 @@ const Page = ({ params }) => {
   const pathname = usePathname();
   const slug = pathname.split("/").pop();
 
-  //redux dispacth
-  const dispatch = useDispatch();
-  const { allTableSection, loading, error } = useSelector(
-    (state) => state.DashboarAdmidRedux
-  );
-
-  useEffect(() => {
+// Usamos la sintaxis de objeto, que es la forma requerida a partir de React Query v5
+const { data, error, isLoading } = useQuery({
+  queryKey: ['fetchAllNewTables', user.token, idSection], // Clave única como array
+  queryFn: () => {
     if (idSection) {
-      dispatch(fetchhAllNewTables({ token: user.token, idSection:idSection }));
+      return fetchAllNewTables({ token: user.token, idSection });
     } else if (idSectionPendiente) {
-      dispatch(getAllPeding({ token: user.token, idSection:idSectionPendiente }));
+      return fetchPendingTables({ token: user.token, idSectionPendiente });
     } else if (idSectionSubPendiente) {
-      dispatch(
-        getAllPedingUnresolved({ token: user.token, idSection:idSectionSubPendiente })
-      );
+      return fetchSubPendingTables({ token: user.token, idSectionSubPendiente });
     }
-  }, [
-    dispatch,
-    idSection,
-    idSectionPendiente,
-    idSectionSubPendiente,
-    refresh,
-    user.token,
-  ]);
+  },
+  refetchInterval: 10000, 
+  onError: (error) => {
+    console.error('Error fetching data:', error);
+  },
+  
+  onSuccess: (data) => {
+    console.log('Data fetched successfully:', data);
+  },
+});
 
-  if (loading) {
+
+  if (isLoading ) {
     return <LoadingTables />;
   }
 
@@ -92,7 +108,7 @@ const Page = ({ params }) => {
           <TablesUser
             nameSection={nameSection}
             idSectionSubPendiente={idSectionSubPendiente}
-            allUser={allTableSection}
+            allUser={data}
           />
         </div>
       </main>

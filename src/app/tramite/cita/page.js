@@ -165,7 +165,7 @@ const Page = () => {
         {matches && <Header />}
         <main className="bg-white">
           {matches && (
-            <Username firstName={user.firstName} lastName={user.lastName} />
+            <Username firstName={user.firstName} paterno={user.apellido_paterno} materno={user.apellido_materno} />
           )}
           <div className="px-10 py-4">
             <h1 className="text-3xl font-bold uppercase">Reserve su cita</h1>

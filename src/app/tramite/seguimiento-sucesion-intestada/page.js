@@ -125,13 +125,9 @@ const Page = () => {
         {matches && <Header Followid={id} />}
         <main className="bg-white relative">
           {loadingFile && <LodingFile />}
-          {/* {validCita?.processStatus?.status === "VERIFICADO" && mixto !== 0 && (
-            <CountdownTwoWeeks
-              startDate={validCita?.processStatus?.updatedAt}
-            />
-          )} */}
+
           {matches && (
-            <Username firstName={user.firstName} lastName={user.lastName} />
+            <Username firstName={user.firstName} paterno={user.apellido_paterno} materno={user.apellido_materno} />
           )}
           <div className="px-10 py-4">
             {validCita?.processStatus?.status === "VERIFICADO" &&

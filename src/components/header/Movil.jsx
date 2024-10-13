@@ -16,7 +16,7 @@ function Movil({ Followid, role }) {
       <div className="flex gap-3 justify-center items-center mr-3">
         <Avatar variant="filled" radius="sm" color="lime" src="" />
         <p className="font-semibold text-white uppercase">
-          {user.firstName} {user.lastName}
+          {user.firstName} {user.apellido_paterno} {user.apellido_materno}
         </p>
       </div>
       {role !== "administrator" && (
