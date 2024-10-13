@@ -46,7 +46,7 @@ const Page = () => {
         resSuper.forEach((adm) => {
           nameSuperArray.push({
             value: adm.user.id,
-            label: `${adm.user.firstName} ${adm.user.lastName}`,
+            label: `${adm.user.firstName} ${adm.user.apellido_paterno} ${adm.user.apellido_materno}`,
           });
         });
         resHorario.forEach((time) => {
