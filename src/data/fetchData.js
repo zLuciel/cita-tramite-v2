@@ -515,6 +515,38 @@ async function updateMessageCite(token, idCita, message) {
   return res;
 }
 
+
+async function sendObserDocument(token, email) {
+  const url = `https://xynydxu4qi.us-east-2.awsapprunner.com/api/email/state-change?email=${email}`;
+  const resProcess = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const res = await resProcess.json();
+  return res;
+}
+
+async function sendVeryDocument(token, email) {
+  const url = `https://xynydxu4qi.us-east-2.awsapprunner.com/api/email/verified-documents?email=${email}`;
+  const resProcess = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const res = await resProcess.json();
+  return res;
+}
+
+
+
+
 // todo login para el usuario
 const urlPagoOnline = "http://172.16.69.13:8800/api";
 async function LoginPagoOnline(data) {
@@ -642,6 +674,8 @@ async function UpdateUserLogin(data) {
 }
 //getCompletFilesInputs
 const dataApi = {
+  sendVeryDocument,
+  sendObserDocument,
   UpdateUserLogin,
   CreateUserLogin,
   LoginFormPost,

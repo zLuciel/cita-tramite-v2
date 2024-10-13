@@ -8,26 +8,27 @@ import "dayjs/locale/es";
 const Calendary = ({ selectedDate, setSelectedDate, setIdTime, initialDate }) => {
   const [selectedSaturday, setSelectedSaturday] = useState(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [thirdSaturday, setThirdSaturday] = useState(null);
+  const [blockedSaturdays, setBlockedSaturdays] = useState([]);
 
-  // Función para calcular el tercer sábado después de una fecha dada
-  const calculateThirdSaturday = (startDate) => {
+  // Función para calcular los sábados dentro de los próximos 14 días
+  const calculateBlockedSaturdays = (startDate) => {
+    const blocked = [];
     let date = new Date(startDate);
-    let saturdayCount = 0;
 
-    while (saturdayCount < 3) {
-      date.setDate(date.getDate() + 1); // Avanzar un día
-      if (date.getDay() === 6) {
-        saturdayCount++;
+    // Recorrer 14 días desde la fecha inicial
+    for (let i = 0; i < 14; i++) {
+      if (date.getDay() === 6) { // Si es sábado
+        blocked.push(new Date(date)); // Agregar el sábado bloqueado
       }
+      date.setDate(date.getDate() + 1); // Avanzar un día
     }
-    return date; // Esta será la fecha del tercer sábado
+    return blocked;
   };
 
   useEffect(() => {
     if (initialDate) {
-      const thirdSat = calculateThirdSaturday(initialDate);
-      setThirdSaturday(thirdSat);
+      const blockedSats = calculateBlockedSaturdays(initialDate);
+      setBlockedSaturdays(blockedSats);
     }
   }, [initialDate]);
 
@@ -38,9 +39,14 @@ const Calendary = ({ selectedDate, setSelectedDate, setIdTime, initialDate }) =>
     return date < today && isSaturday(date);
   };
 
-  // Verificar si la fecha es seleccionable (después del tercer sábado)
+  // Verificar si la fecha es seleccionable
   const isSelectable = (date) => {
-    return thirdSaturday && date >= thirdSaturday && isSaturday(date);
+    const isBlocked = blockedSaturdays.some(
+      (blockedDate) => blockedDate.toISOString().split("T")[0] === date.toISOString().split("T")[0]
+    );
+    const today = new Date();
+    // No se puede seleccionar si es sábado pasado o si está bloqueado
+    return isSaturday(date) && !isBlocked && date >= today;
   };
 
   const handleFormatTime = (dateString) => {
@@ -60,7 +66,8 @@ const Calendary = ({ selectedDate, setSelectedDate, setIdTime, initialDate }) =>
   };
 
   const renderDay = (date) => {
-    const isDisabled = !isSelectable(date) || isSaturdayBeforeToday(date);
+    const isPastSaturday = isSaturdayBeforeToday(date); // Sábados pasados
+    const isDisabled = !isSelectable(date) || isPastSaturday;
     const isSelected = selectedSaturday === date.toISOString().split("T")[0];
     const backgroundColor = isSelected ? "rgb(217 255 3)" : "white"; // Color mostaza si es seleccionado
     const indicatorColor = isSelectable(date) ? "green" : "red"; // Verde si es seleccionable, rojo si no
@@ -106,5 +113,3 @@ const Calendary = ({ selectedDate, setSelectedDate, setIdTime, initialDate }) =>
 };
 
 export default Calendary;
-
-

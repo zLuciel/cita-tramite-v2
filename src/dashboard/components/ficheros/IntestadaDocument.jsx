@@ -16,15 +16,14 @@ const IntestadaDocument = ({
   email = false,
   setRefresh,
   setVerified,
+  setObserFile,
 }) => {
   const { setDocumentUser } = useProduct();
-  const {selectValue,setSelectValue} = [""]
 
   const url = "https://xynydxu4qi.us-east-2.awsapprunner.com/api/files/pdf";
 
   const handleChange = async (id, value) => {
-    const updateState = await dataApi.updateStatus(token, value, id);
-
+    await dataApi.updateStatus(token, value, id);
     // await dataApi.getValidCita(token, dSection);
     const data = await dataApi.getUserDocumentSection(
       token,
@@ -34,9 +33,10 @@ const IntestadaDocument = ({
 
     const allInProcess = data.some((doc) => doc.status == "EN PROCESO");
     const allVerified = data.every((doc) => doc.status == "VERIFICADO");
+    const hasObserved = data.some((doc) => doc.status === "OBSERVADO");
 
+    setObserFile(hasObserved)
     setDocumentUser(data);
-
     setVerified(allVerified);
     setRefresh(allInProcess);
   };

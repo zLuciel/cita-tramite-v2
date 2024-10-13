@@ -8,15 +8,15 @@ import dataApi from "@/data/fetchData";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button, Tooltip } from "@mantine/core";
 import { FaPersonWalkingArrowRight } from "react-icons/fa6";
-import ModalCita from "@/dashboard/components/modal/ModalCita";
 import LoadingSJL from "@/components/loading/LoadingSJL";
 import MessageDocument from "@/components/mensajes/MessageDocument";
+import { notifications } from "@mantine/notifications";
 
 const Page = ({ params }) => {
   const { user, documentUser, setDocumentUser } = useProduct();
   const [refresh, setRefresh] = useState(true);
   const [verified, setVerified] = useState(true);
-  const [verifyCita, setVerifyCita] = useState(false);
+  const [ObserFile, setObserFile] = useState(false);
   const [userOne, setUserOne] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -81,6 +81,7 @@ const Page = ({ params }) => {
           setDocumentUser(data);
         }
         const allVerified = data.every((doc) => doc.status == "VERIFICADO");
+
         setVerified(allVerified);
       } finally {
         setLoading(false);
@@ -95,11 +96,49 @@ const Page = ({ params }) => {
     return <LoadingSJL />;
   }
 
-  const handleSkipUser = () => {
+  const handleSkipUser = async () => {
+    notifications.show({
+      id: 1,
+      withCloseButton: true,
+      autoClose: false,
+      title: "Enviando correo...",
+      message: "",
+      color: "green",
+      className: "my-notification-class",
+      loading: true,
+    });
+    let message = false;
+    if (verified) {
+      const emailSendVery = await dataApi.sendVeryDocument(
+        user.token,
+        userOne[0].user.email
+      );
+      message = emailSendVery.message;
+    } else if (ObserFile) {
+      const emailSendObser = await dataApi.sendObserDocument(
+        user.token,
+        userOne[0].user.email
+      );
+      message = emailSendObser.message;
+    }
+    if (message) {
+      notifications.update({
+        id: 1,
+        withCloseButton: true,
+        autoClose: 3000,
+        title: message,
+        message: "",
+        color: "green",
+        className: "my-notification-class",
+        loading: false,
+      });
+    }
+
     setRefresh(false);
     setDocumentUser([]);
     router.back();
   };
+  console.log(userOne, 1444);
 
   return (
     <>
@@ -119,7 +158,8 @@ const Page = ({ params }) => {
                   </h3>
                   <p className="font-semibold uppercase">
                     {documentUser[0]?.user.firstName}{" "}
-                    {documentUser[0]?.user.lastName}
+                    {documentUser[0]?.user.apellido_paterno}{" "}
+                    {documentUser[0]?.user.apellido_materno}
                   </p>
                 </span>
               </div>
@@ -133,8 +173,7 @@ const Page = ({ params }) => {
                 documentUser={documentUser}
                 idSection={idSection}
                 setVerified={setVerified}
-                // sectionName={data.sectionName}
-                // documents={data.documents}
+                setObserFile={setObserFile}
                 token={user.token}
               />
               {!citaQuery && (
