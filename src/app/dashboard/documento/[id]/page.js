@@ -7,31 +7,42 @@ import TablesUser from "@/dashboard/components/tableUser/TableUser";
 import { useProduct } from "@/provider/ProviderContext";
 import { Button } from "@mantine/core";
 import { usePathname, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
-//redux
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+// Redux
+import { useDispatch } from "react-redux";
 import {
   fetchhAllNewTables,
   getAllPeding,
   getAllPedingUnresolved,
 } from "@/redux/dashboard/actions";
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
-const fetchAllNewTables = async ({ token, idSection }) => {
-  const url = "https://xynydxu4qi.us-east-2.awsapprunner.com";
-  const response = await fetch(`${url}/api/process-status/completed-users/${idSection}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Error ${response.status}: ${response.statusText}`);
+const fetchData = async ({
+  token,
+  idSection,
+  idSectionPendiente,
+  idSectionSubPendiente,
+  dispatch,
+}) => {
+  if (idSection) {
+    return dispatch(
+      fetchhAllNewTables({ token, idSection: idSectionPendiente })
+    ).unwrap();
+  } else if (idSectionPendiente) {
+    return dispatch(
+      getAllPeding({ token, idSection: idSectionPendiente })
+    ).unwrap();
+  } else if (idSectionSubPendiente) {
+    return dispatch(
+      getAllPedingUnresolved({
+        token,
+        idSection: idSectionSubPendiente,
+      })
+    ).unwrap();
+  } else {
+    throw new Error("No section selected");
   }
-
-  return response.json();
 };
 
 const Page = ({ params }) => {
@@ -44,35 +55,37 @@ const Page = ({ params }) => {
   const nameSection = params.id;
   const pathname = usePathname();
   const slug = pathname.split("/").pop();
+  const dispatch = useDispatch();
 
-// Usamos la sintaxis de objeto, que es la forma requerida a partir de React Query v5
-const { data, error, isLoading } = useQuery({
-  queryKey: ['fetchAllNewTables', user.token, idSection], // Clave única como array
-  queryFn: () => {
-    if (idSection) {
-      return fetchAllNewTables({ token: user.token, idSection });
-    } else if (idSectionPendiente) {
-      return fetchPendingTables({ token: user.token, idSectionPendiente });
-    } else if (idSectionSubPendiente) {
-      return fetchSubPendingTables({ token: user.token, idSectionSubPendiente });
-    }
-  },
-  refetchInterval: 10000, 
-  onError: (error) => {
-    console.error('Error fetching data:', error);
-  },
-  
-  onSuccess: (data) => {
-    console.log('Data fetched successfully:', data);
-  },
-});
+  const { data, error, isLoading } = useQuery({
+    queryKey: [
+      "fetchAllNewTables",
+      user.token,
+      idSection,
+      idSectionPendiente,
+      idSectionSubPendiente,
+    ],
+    queryFn: () =>
+      fetchData({
+        token: user.token,
+        idSection,
+        idSectionPendiente,
+        idSectionSubPendiente,
+        dispatch,
+      }),
+    refetchInterval: 10000,
+    onError: (error) => {
+      console.error("Error fetching data:", error);
+    },
+    onSuccess: (data) => {
+      console.log("Data fetched successfully:", data);
+    },
+  });
 
-
-  if (isLoading ) {
+  if (isLoading) {
     return <LoadingTables />;
   }
 
-  
   return (
     <div className="">
       {<Movil role={"super user"} />}
