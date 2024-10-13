@@ -17,6 +17,7 @@ import "@mantine/dates/styles.css";
 import { notifications } from "@mantine/notifications";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
+import dataApi from "@/data/fetchData";
 
 // corregir el formato del horario causa error
 
@@ -36,30 +37,30 @@ import "dayjs/locale/es";
 
 const FormCreateUser = ({ registreForm, setView }) => {
   const [date, setDate] = useState(false);
-  const [inputDate, setInputDate] = useState(null);
+  // const [inputDate, setInputDate] = useState(null);
   const [emailVerify, setEmailVerify] = useState(false);
 
   // const [inputValue, setInputValue] = useState("");
   // const [error, setError] = useState("");
 
-  function formatDateToISO(dateString = false) {
-    if (dateString) {
-      const date = new Date(dateString);
-      const utcDate = new Date(
-        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
-      );
+  // function formatDateToISO(dateString = false) {
+  //   if (dateString) {
+  //     const date = new Date(dateString);
+  //     const utcDate = new Date(
+  //       Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+  //     );
 
-      if (utcDate) {
-        return utcDate.toISOString().split("T")[0];
-      }
-    }
-  }
+  //     if (utcDate) {
+  //       return utcDate.toISOString().split("T")[0];
+  //     }
+  //   }
+  // }
 
   const registreApi = async (data) => {
-    if (inputDate) {
-      const formdate = formatDateToISO(inputDate);
-      data.birthDate = formdate;
-    }
+    // if (inputDate) {
+    //   const formdate = formatDateToISO(inputDate);
+    //   data.birthDate = formdate;
+    // }
 
     notifications.show({
       id: 15,
@@ -71,18 +72,9 @@ const FormCreateUser = ({ registreForm, setView }) => {
       className: "",
       loading: true,
     });
-    const url =
-      "https://xynydxu4qi.us-east-2.awsapprunner.com/api/auth/register";
-    try {
-      const myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
-      const response = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: myHeaders,
-      });
 
-      const json = await response.json();
+    try {
+      const json = dataApi.CreateUserLogin(data);
       if (json.error) {
         notifications.update({
           id: 15,
@@ -100,7 +92,7 @@ const FormCreateUser = ({ registreForm, setView }) => {
           id: 15,
           withCloseButton: true,
           autoClose: 3000,
-          title: `${json.firstName} ${json.lastName}`,
+          title: `${json.firstName} ${json.apellido_paterno} ${json.apellido_materno}`,
           message: "Gracias por registrarte",
           color: "green",
           className: "",
@@ -125,10 +117,10 @@ const FormCreateUser = ({ registreForm, setView }) => {
     } catch (error) {}
   };
 
-  const handleChange = (event) => {
-    const { value } = event.target;
-    setInputDate(value);
-  };
+  // const handleChange = (event) => {
+  //   const { value } = event.target;
+  //   setInputDate(value);
+  // };
 
   return (
     <form
@@ -164,16 +156,29 @@ const FormCreateUser = ({ registreForm, setView }) => {
         />
         <TextInput
           withAsterisk
-          label="APELLIDOS"
-          placeholder="Ingrese su apellido"
+          label="APELLIDO PATERNO"
+          placeholder="Ingrese su apellido paterno"
           leftSection={
             <FaUserEdit
               className="flex justify-center items-center"
               size={16}
             />
           }
-          key={registreForm.key("lastName")}
-          {...registreForm.getInputProps("lastName")}
+          key={registreForm.key("apellido_paterno")}
+          {...registreForm.getInputProps("apellido_paterno")}
+        />
+        <TextInput
+          withAsterisk
+          label="APELLIDO MATERNO"
+          placeholder="Ingrese su apellido materno"
+          leftSection={
+            <FaUserEdit
+              className="flex justify-center items-center"
+              size={16}
+            />
+          }
+          key={registreForm.key("apellido_materno")}
+          {...registreForm.getInputProps("apellido_materno")}
         />
 
         <TextInput
@@ -191,29 +196,16 @@ const FormCreateUser = ({ registreForm, setView }) => {
         />
         <TextInput
           withAsterisk
-          label="DEPARTAMENTO"
-          placeholder="Ejemplo: Lima"
+          label="DIRECCIÓN"
+          placeholder="Ejemplo: jr sol de oro 7028"
           leftSection={
             <FaMapMarkerAlt
               className="flex justify-center items-center"
               size={16}
             />
           }
-          key={registreForm.key("department")}
-          {...registreForm.getInputProps("department")}
-        />
-        <TextInput
-          withAsterisk
-          label="PROVINCIA"
-          placeholder="ejemplo: Lima"
-          leftSection={
-            <FaMapMarkerAlt
-              className="flex justify-center items-center"
-              size={16}
-            />
-          }
-          key={registreForm.key("province")}
-          {...registreForm.getInputProps("province")}
+          key={registreForm.key("address")}
+          {...registreForm.getInputProps("address")}
         />
         <TextInput
           withAsterisk
@@ -230,7 +222,7 @@ const FormCreateUser = ({ registreForm, setView }) => {
         />
         <InputBase
           withAsterisk
-          label="TELEFONO"
+          label="TELÉFONO"
           component={IMaskInput}
           mask="000000000"
           placeholder="ejemplo: 999 999 999"
@@ -240,19 +232,8 @@ const FormCreateUser = ({ registreForm, setView }) => {
           key={registreForm.key("mobileNumber")}
           {...registreForm.getInputProps("mobileNumber")}
         />
-        <div>
-          <label>
-            <p className="font-semibold text-[.95rem] ">FECHA DE NACIMIENTO</p>
-            <input
-              type="date"
-              name="fechaformart"
-              className="fecha-registre"
-              onChange={handleChange}
-            />
-          </label>
-        </div>
 
-        <div>
+        <div className="">
           <PasswordInput
             label="CONTRASEÑA"
             placeholder="Ingrese su contraseña"

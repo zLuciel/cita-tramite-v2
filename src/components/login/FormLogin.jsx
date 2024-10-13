@@ -1,17 +1,20 @@
 import React, { useState } from "react";
-import { useLocalStorage } from "@mantine/hooks";
-import { Button, Group, PasswordInput, TextInput } from "@mantine/core";
+import { useDisclosure, useLocalStorage } from "@mantine/hooks";
+import { Button, Group, Modal, PasswordInput, TextInput } from "@mantine/core";
 import { LiaDigitalTachographSolid } from "react-icons/lia";
 import { TbPasswordFingerprint } from "react-icons/tb";
 import { useRouter } from "next/navigation";
 import { notifications } from "@mantine/notifications";
 import { useProduct } from "@/provider/ProviderContext";
+import dataApi from "@/data/fetchData";
+import UpdateForm from "./UpdateForm";
 
 const FormLogin = ({ form }) => {
   const router = useRouter();
-  const { documentSection } = useProduct();
+  const [opened, { open, close }] = useDisclosure(false);
 
   const [verifyEmail, setVerifyEmail] = useState(false);
+  const [idUser, setIdUser] = useState("");
   // guardado de token al storage
   const [token, setToken] = useLocalStorage({
     key: "token",
@@ -29,23 +32,27 @@ const FormLogin = ({ form }) => {
       loading: true,
     });
 
-    const url = "https://xynydxu4qi.us-east-2.awsapprunner.com/api/auth/login";
     try {
-      const myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
-      const response = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify(data),
-        headers: myHeaders,
-      });
+      const jsondata = await dataApi.LoginFormPost(data);
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw { statusCode: errorData?.statusCode };
+      if (
+        jsondata.address === null &&
+        jsondata.district === null &&
+        jsondata.mobileNumber === null
+      ) {
+        setIdUser(jsondata.id)
+        notifications.update({
+          id: 70,
+          withCloseButton: true,
+          autoClose: 3000,
+          title: `${jsondata.firstName} ${jsondata.apellido_paterno} ${jsondata.apellido_materno}`,
+          message: "Actualize sus datos por favor",
+          color: "grape",
+          loading: false,
+        });
+        open();
+        return;
       }
-
-      const jsondata = await response.json();
-
       if (!jsondata.emailVerified) {
         setVerifyEmail(jsondata.message);
         notifications.update({
@@ -66,7 +73,7 @@ const FormLogin = ({ form }) => {
           id: 70,
           withCloseButton: true,
           autoClose: 3000,
-          title: `Bienvenido ${jsondata.firstName} ${jsondata.lastName} `,
+          title: `Bienvenido ${jsondata.firstName} ${jsondata.apellido_paterno} ${jsondata.apellido_materno}`,
           message: "",
           color: "green",
           loading: false,
@@ -78,30 +85,28 @@ const FormLogin = ({ form }) => {
           id: 70,
           withCloseButton: true,
           autoClose: 3000,
-          title: `Bienvenido ${jsondata.firstName} ${jsondata.lastName} `,
+          title: `Bienvenido ${jsondata.firstName} ${jsondata.apellido_paterno} ${jsondata.apellido_materno}`,
           message: "",
           color: "green",
           className: "",
           loading: false,
         });
-        
-        router.push(
-          `/dashboard/presentacion`
-        );
+
+        router.push(`/dashboard/presentacion`);
         return;
-      }else if (jsondata.roles[0] === "administrator"){
+      } else if (jsondata.roles[0] === "administrator") {
         notifications.update({
           id: 70,
           withCloseButton: true,
           autoClose: 3000,
-          title: `Bienvenido ${jsondata.firstName} ${jsondata.lastName} `,
+          title: `Bienvenido ${jsondata.firstName} ${jsondata.apellido_paterno} ${jsondata.apellido_materno}`,
           message: "",
           color: "green",
           className: "",
           loading: false,
         });
-        router.push("/dashboard/administrador/asignacion")
-        return
+        router.push("/dashboard/administrador/asignacion");
+        return;
       }
       // router.push("/");
     } catch (error) {
@@ -127,53 +132,58 @@ const FormLogin = ({ form }) => {
           loading: false,
         });
       }
-    } 
+    }
   };
 
   return (
-    <form
-      className="flex flex-col gap-3"
-      onSubmit={form.onSubmit((values) => loginApi(values))}
-    >
-      <TextInput
-        withAsterisk
-        label="DNI"
-        placeholder="Ingrese su dni"
-        leftSection={
-          <LiaDigitalTachographSolid
-            className="flex justify-center items-center"
-            size={16}
-          />
-        }
-        key={form.key("dni")}
-        {...form.getInputProps("dni")}
-      />
+    <>
+      <Modal opened={opened} onClose={close} title="ACTUALIZE SUS DATOS A CONTINUACIÓN" centered>
+        <UpdateForm idUser={idUser} close={close} />
+      </Modal>
+      <form
+        className="flex flex-col gap-3"
+        onSubmit={form.onSubmit((values) => loginApi(values))}
+      >
+        <TextInput
+          withAsterisk
+          label="DNI"
+          placeholder="Ingrese su dni"
+          leftSection={
+            <LiaDigitalTachographSolid
+              className="flex justify-center items-center"
+              size={16}
+            />
+          }
+          key={form.key("dni")}
+          {...form.getInputProps("dni")}
+        />
 
-      <PasswordInput
-        withAsterisk
-        label="CONTRASEÑA"
-        placeholder="Ingrese su contraseña"
-        leftSection={
-          <TbPasswordFingerprint
-            className="flex justify-center items-center"
-            size={16}
-          />
-        }
-        key={form.key("password")}
-        {...form.getInputProps("password")}
-      />
+        <PasswordInput
+          withAsterisk
+          label="CONTRASEÑA"
+          placeholder="Ingrese su contraseña"
+          leftSection={
+            <TbPasswordFingerprint
+              className="flex justify-center items-center"
+              size={16}
+            />
+          }
+          key={form.key("password")}
+          {...form.getInputProps("password")}
+        />
 
-      <Group className="w-full" mt="md">
-        {verifyEmail && (
-          <div className="font-semibold rounded-md login-email-very p-3 text-center">
-            {verifyEmail}
-          </div>
-        )}
-        <Button type="submit" fullWidth>
-          Iniciar sesion
-        </Button>
-      </Group>
-    </form>
+        <Group className="w-full" mt="md">
+          {verifyEmail && (
+            <div className="font-semibold rounded-md login-email-very p-3 text-center">
+              {verifyEmail}
+            </div>
+          )}
+          <Button type="submit" fullWidth>
+            Iniciar sesion
+          </Button>
+        </Group>
+      </form>
+    </>
   );
 };
 

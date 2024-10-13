@@ -28,15 +28,15 @@ const Page = () => {
   const [timeInitial, setTimeInitial] = useState(false);
   const matches = useMediaQuery("(min-width: 1099px)");
   const searchParams = useSearchParams();
-  const router = useRouter()
+  const router = useRouter();
   const id = searchParams.get("id");
 
   useEffect(() => {
     const getAdmi = async () => {
       const validCitaFetch = await dataApi.getValidCita(user.token, id);
-      setTimeInitial(validCitaFetch?.processStatus?.updatedAt)
-      console.log(validCitaFetch,141414);
-      
+      setTimeInitial(validCitaFetch?.processStatus?.updatedAt);
+      console.log(validCitaFetch, 141414);
+
       try {
         const resSuper = await dataApi.getSuperUser(user.token, id);
         const resHorario = await dataApi.getTimeCita(user.token);
@@ -77,7 +77,7 @@ const Page = () => {
           user.token,
           idSuper,
           selectedDate
-        )
+        );
 
         // Obtener todos los IDs de horarios
         const idsToDisable = getTimes.map((item) => item.schedule.id);
@@ -101,7 +101,6 @@ const Page = () => {
   }, [idSuper, selectedDate, user.token]);
 
   const handleCreateCita = async () => {
-
     notifications.show({
       id: id,
       withCloseButton: true,
@@ -123,8 +122,7 @@ const Page = () => {
 
     //todo valida si ya tiene cita de verdad
     const verifyCita = await dataApi.verifyCita(user.token, id);
-    
-    
+
     if (res.status === "PENDING") {
       notifications.update({
         id: id,
@@ -138,7 +136,7 @@ const Page = () => {
         loading: false,
       });
       window.open(`/confirmacion-de-cita?id=${id}`, "_blank");
-      router.back()
+      router.back();
     }
     if (res.ok) {
       notifications.update({
@@ -192,7 +190,7 @@ const Page = () => {
                   />
                 </div>
                 <Calendary
-                 initialDate = {timeInitial}
+                  initialDate={timeInitial}
                   setIdTime={setIdTime}
                   selectedDate={selectedDate}
                   setSelectedDate={setSelectedDate}

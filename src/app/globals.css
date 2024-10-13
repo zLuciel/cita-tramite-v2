@@ -80,8 +80,9 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-      url(https://s3.amazonaws.com/semanaeconomica.bucket/semanaeconomica2/articles/banner/35887_1682619081_banner.jpg)
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+      /* url(https://s3.amazonaws.com/semanaeconomica.bucket/semanaeconomica2/articles/banner/35887_1682619081_banner.jpg) */
+      url(../assets/fondojsl.jpg)
       center center/cover no-repeat;
   z-index: -1;
 }
@@ -115,7 +116,8 @@ body {
   background-image: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%);
 }
 .registre {
-  max-width: 700px;
+  width: 100%;
+  max-width: 600px;
 }
 .loadingFile{
   background: rgba(255, 255, 255, 0.447);

@@ -20,11 +20,7 @@ export const Login = () => {
     validate: {
       dni: (value) => (/^\d{8}$/.test(value) ? null : "Ingrese un DNI valido"),
       password: (value) => {
-        if (value.length < 6) return "La contraseña debe tener al menos 6 caracteres";
-        // if (!/[A-Z]/.test(value)) return "La contraseña debe tener al menos una letra mayúscula";
-        // if (!/[a-z]/.test(value)) return "La contraseña debe tener al menos una letra minúscula";
-        // if (!/[0-9]/.test(value)) return "La contraseña debe tener al menos un número";
-        // if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) return "La contraseña debe tener al menos un carácter especial";
+        if (value.length > 5) return "La contraseña debe tener al maximo 5 caracteres";
         return null;
       },
     },
@@ -35,14 +31,13 @@ export const Login = () => {
     initialValues: {
       dni: "",
       firstName: "",
-      lastName: "",
-      department: "",
-      province: "",
+      apellido_paterno: "",
+      apellido_materno: "",
+      address: "",
       district: "",
       mobileNumber: "",
       email: "",
       password: "",
-      // birthDate:"",
     },
   
     validate: {
@@ -52,24 +47,17 @@ export const Login = () => {
         /^\d{9}$/.test(value) ? null : "Ingrese un número válido",
       firstName: (value) =>
         value.trim() ? null : "El nombre es obligatorio",
-      // birthDate: (value) =>{
-      //   if (!value) {
-      //     return "Fecha de nacimiento obligatoria";
-      //   }
-      // },
-      lastName: (value) =>
-        value.trim() ? null : "El apellido es obligatorio",
-      department: (value) =>
-        value.trim() ? null : "El departamento es obligatorio",
-      province: (value) =>
-        value.trim() ? null : "La provincia es obligatoria",
+ 
+      apellido_paterno: (value) =>
+        value.trim() ? null : "El apellido paterno es obligatorio",
+      apellido_materno: (value) =>
+        value.trim() ? null : "El apellido materno es obligatorio",
+      address: (value) =>
+        value.trim() ? null : "La dirección es obligatoria",
       district: (value) =>
         value.trim() ? null : "El distrito es obligatorio",
       password: (value) => {
-        if (value.length < 6) return "La contraseña debe tener al menos 6 caracteres";
-        // if (!/[A-Z]/.test(value)) return "La contraseña debe tener al menos una letra mayúscula";
-        // if (!/[a-z]/.test(value)) return "La contraseña debe tener al menos una letra minúscula";
-        // if (!/[!@#$%^&*(),.?":{}|<>]/.test(value)) return "La contraseña debe tener al menos un carácter especial";
+        if (value.length > 5) return "La contraseña debe tener al maximo 5 caracteres";
         return null;
       },
     },

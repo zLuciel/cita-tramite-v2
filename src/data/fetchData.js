@@ -226,7 +226,7 @@ async function verifyCita(token, id) {
   return res;
 }
 
-async function getSuperUser(token,idSection) {
+async function getSuperUser(token, idSection) {
   const url = `https://xynydxu4qi.us-east-2.awsapprunner.com/api/user-permissions/platform-operators/${idSection} `;
   const verify = await fetch(url, {
     headers: {
@@ -470,7 +470,6 @@ async function CreateAsingSection(token, sectionId, idUser) {
   return res;
 }
 
-
 async function getValueAccess(token, userId) {
   const url = `https://xynydxu4qi.us-east-2.awsapprunner.com/api/user-permissions/${userId}`;
   const resProcess = await fetch(url, {
@@ -487,7 +486,7 @@ async function getValueAccess(token, userId) {
 async function deleteValueAccess(token, id) {
   const url = `https://xynydxu4qi.us-east-2.awsapprunner.com/api/user-permissions/${id}`;
   const resProcess = await fetch(url, {
-    method:"DELETE",
+    method: "DELETE",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -498,11 +497,10 @@ async function deleteValueAccess(token, id) {
   return res;
 }
 
-
-async function updateMessageCite(token,idCita,message) {
+async function updateMessageCite(token, idCita, message) {
   const bodyJson = {
-    "message": message
-}
+    message: message,
+  };
   const url = `https://xynydxu4qi.us-east-2.awsapprunner.com/api/appointment/${idCita}`;
   const resProcess = await fetch(url, {
     method: "PATCH",
@@ -516,8 +514,123 @@ async function updateMessageCite(token,idCita,message) {
   const res = await resProcess.json();
   return res;
 }
+
+// todo login para el usuario
+const urlPagoOnline = "http://172.16.69.13:8800/api";
+async function LoginPagoOnline(data) {
+  const url = `${urlPagoOnline}/inicio-sesion?codigo=${data.dni}&password=${data.password}`;
+  const resLogin = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const res = await resLogin.json();
+  return res;
+}
+
+async function LoginFormPost(data) {
+  
+  
+  const resPagoOnline = await LoginPagoOnline(data);
+ 
+  const bodyForm = {
+    documentNumber: resPagoOnline.usuario.numero_documento,
+    firstName: resPagoOnline.usuario.nombres,
+    apellido_paterno: resPagoOnline.usuario.apellido_paterno,
+    apellido_materno: resPagoOnline.usuario.apellido_materno,
+    email: resPagoOnline.usuario.email,
+  };
+
+
+  const url = `https://xynydxu4qi.us-east-2.awsapprunner.com/api/auth/login`;
+  const resProcess = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(bodyForm),
+  });
+
+  const res = await resProcess.json();
+ console.log(res,74);
+ 
+  
+  return res;
+}
+
+async function CreateUserPagoOnline(data) {
+  const queryString =
+    `numero_documento=${data.dni}&correo=${data.email}&nombres=${data.firstName}` +
+    `&apellido_paterno=${data.apellido_paterno}&contrasena=${data.password}` +
+    `&tipo_documento_identidad=${2}` +
+    `&razon_social=${""}&apellido_materno=${data.apellido_materno}`;
+
+  const url = `${urlPagoOnline}/registrar?${queryString}`;
+  const resProcess = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const res = await resProcess.json();
+  return res;
+}
+
+async function CreateUserLogin(data) {
+  const resPagoOnline = await CreateUserPagoOnline(data);
+
+  const bodyForm = {
+    dni: resPagoOnline.numero_documento,
+    firstName: resPagoOnline.nombres,
+    apellido_paterno: resPagoOnline.apellido_paterno,
+    apellido_materno: resPagoOnline.apellido_materno,
+    email: resPagoOnline.email,
+    address:data.address,
+    mobileNumber:data.mobileNumber,
+    district:data.district
+  };
+
+  const url = `https://xynydxu4qi.us-east-2.awsapprunner.com/api/auth/login`;
+  const resProcess = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(bodyForm),
+  });
+
+  const res = await resProcess.json();
+  return res;
+}
+
+
+async function UpdateUserLogin(data) {
+  const idUser = {...data};
+  delete data.idUser;
+  console.log(data,"viendo datos enviado")
+  const url = `https://xynydxu4qi.us-east-2.awsapprunner.com/api/user/${idUser.idUser}`;
+  const resProcess = await fetch(url, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  const res = await resProcess.json();
+  console.log(res,"viendo res update");
+  
+  return res;
+}
 //getCompletFilesInputs
 const dataApi = {
+  UpdateUserLogin,
+  CreateUserLogin,
+  LoginFormPost,
   updateMessageCite,
   deleteValueAccess,
   getValueAccess,
