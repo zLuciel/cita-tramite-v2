@@ -15,7 +15,7 @@ export default function TablesUser({
   const router = useRouter();
 
   React.useEffect(() => {
-    const formattedUsers = allUser.map((all) => ({
+    const formattedUsers = allUser?.map((all) => ({
       ...all.user,
       firstName: all.user.firstName?.toUpperCase() || "",
       lastName: all.user.lastName?.toUpperCase() || "",

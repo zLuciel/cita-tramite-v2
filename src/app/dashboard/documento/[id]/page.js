@@ -7,7 +7,7 @@ import TablesUser from "@/dashboard/components/tableUser/TableUser";
 import { useProduct } from "@/provider/ProviderContext";
 import { Button } from "@mantine/core";
 import { usePathname, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // Redux
 import { useDispatch } from "react-redux";
 import {
@@ -15,7 +15,6 @@ import {
   getAllPeding,
   getAllPedingUnresolved,
 } from "@/redux/dashboard/actions";
-
 import { useQuery } from "@tanstack/react-query";
 
 const fetchData = async ({
@@ -27,18 +26,18 @@ const fetchData = async ({
 }) => {
   if (idSection) {
     return dispatch(
-      fetchhAllNewTables({ token, idSection: idSectionPendiente, message:false })
+      fetchhAllNewTables({ token, idSection, message: false })
     ).unwrap();
   } else if (idSectionPendiente) {
     return dispatch(
-      getAllPeding({ token, idSection: idSectionPendiente,message:false })
+      getAllPeding({ token, idSection: idSectionPendiente, message: false })
     ).unwrap();
   } else if (idSectionSubPendiente) {
     return dispatch(
       getAllPedingUnresolved({
         token,
         idSection: idSectionSubPendiente,
-        message:false
+        message: false,
       })
     ).unwrap();
   } else {
@@ -74,7 +73,10 @@ const Page = ({ params }) => {
         idSectionSubPendiente,
         dispatch,
       }),
-    refetchInterval: 10000,
+    refetchInterval: 10000, // Intervalo de actualización
+    staleTime: 30000, // Considerar datos frescos durante 30 segundos
+    cacheTime: 60000, // Mantener datos en caché durante 60 segundos
+    refetchOnWindowFocus: false, // No revalidar al enfocar la ventana
     onError: (error) => {
       console.error("Error fetching data:", error);
     },
@@ -83,13 +85,21 @@ const Page = ({ params }) => {
     },
   });
 
-  if (isLoading) {
-    return <LoadingTables />;
-  }
+  const [previousData, setPreviousData] = useState(null);
+
+  useEffect(() => {
+    if (data) {
+      // Si hay datos nuevos, actualiza previousData
+      if (JSON.stringify(data) !== JSON.stringify(previousData)) {
+        setPreviousData(data);
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   return (
     <div className="">
-      {<Movil role={"super user"} />}
+      <Movil role={"super user"} />
       <main className="flex gap-4 flex-col py-5">
         <h2 className="font-semibold uppercase text-2xl text-center">{slug}</h2>
 
@@ -119,10 +129,11 @@ const Page = ({ params }) => {
               ACTUALIZAR LISTA
             </Button> */}
           </div>
+          {error && <div>Error loading data: {error.message}</div>} {/* Manejo de errores */}
           <TablesUser
             nameSection={nameSection}
             idSectionSubPendiente={idSectionSubPendiente}
-            allUser={data}
+            allUser={previousData || data} // Usa previousData si está disponible
           />
         </div>
       </main>
@@ -131,3 +142,5 @@ const Page = ({ params }) => {
 };
 
 export default withAuth(Page, "platform-operator");
+
+

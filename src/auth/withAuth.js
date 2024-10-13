@@ -1,69 +1,70 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import tokenLoginUser from "./token";
 import { useProduct } from "@/provider/ProviderContext";
 import LoadingSJL from "@/components/loading/LoadingSJL";
 import dataApi from "@/data/fetchData";
-import { getAllDocumentsSection } from "@/redux/documents/actions";
+import { useQuery } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
+import { getAllDocumentsSection } from "@/redux/documents/actions";
 
 const withAuth = (WrappedComponent, requiredRole) => {
   const ComponentWithAuth = (props) => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const [isLoading, setIsLoading] = useState(true);
     const { setUser, setAllUser, setDocumentSection } = useProduct();
 
-    const checkAuth = async () => {
-      const token = localStorage.getItem("token");
+    // Función para verificar el token y obtener los datos del usuario
+    const fetchUserData = async (token) => {
+      const userData = await tokenLoginUser(token);
 
-      if (!token) {
-        // Si no hay token, redirigir y no hacer nada más
-        setIsLoading(false); //prueba
-        router.push("/");
-        return;
+      if (!userData || userData.message === "Unauthorized") {
+        throw new Error("Unauthorized");
       }
 
-      try {
-        const userData = await tokenLoginUser(token);
+      const allUsers = await dataApi.getAllUser(token);
+      const document = await dataApi.sectionDocument(token);
 
-        if (!userData || userData.message === "Unauthorized") {
-          localStorage.removeItem("token");
-          router.push("/");
-          setIsLoading(false); //prueba
-          return;
-        }
+      dispatch(getAllDocumentsSection({ token }));
+      setDocumentSection(document);
+      setAllUser(allUsers);
+      setUser(userData);
 
-        const allUsers = await dataApi.getAllUser(token);
-        const document = await dataApi.sectionDocument(token);
-        dispatch(getAllDocumentsSection({token:token}));
-        setDocumentSection(document);
-        setAllUser(allUsers);
-        setUser(userData);
-
-        // Controlador de roles
-        if (requiredRole && userData.roles[0] !== requiredRole) {
-          router.push("/");
-          setIsLoading(false); //prueba
-          return;
-        }
-      } catch (error) {
-        console.error("Error durante la verificación del token:", error);
-        localStorage.removeItem("token"); // Remover el token en caso de error
-        router.push("/");
-      } finally {
-        setIsLoading(false); // Finalizar el estado de carga
+      // Controlador de roles
+      if (requiredRole && userData.roles[0] !== requiredRole) {
+        throw new Error("Unauthorized role");
       }
+
+      return userData;
     };
 
-    useEffect(() => {
-      checkAuth(); // Ejecutar la verificación de autenticación al montar
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); // Solo necesita ejecutarse una vez al montar router, setDocumentSection, setUser
+    // Usar React Query para manejar la autenticación
+    const { data: userData, error, isLoading } = useQuery({
+      queryKey: ["userData"], // Clave única para la consulta
+      queryFn: () => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          throw new Error("No token found");
+        }
+        return fetchUserData(token);
+      },
+      retry: false, // No reintentar en caso de error
+      onError: (error) => {
+        console.error("Error during authentication:", error);
+        localStorage.removeItem("token"); // Remover el token en caso de error
+        router.push("/"); // Redirigir a la página de inicio
+      },
+    });
 
+    // Manejar el estado de carga
     if (isLoading) {
       return <LoadingSJL />; // Mostrar cargando mientras se verifica la autenticación
+    }
+
+    // Si hay un error, redirigir al usuario
+    if (error) {
+      return null; // Puedes mostrar un mensaje de error si lo deseas
     }
 
     return <WrappedComponent {...props} />; // Si está autenticado, renderiza el componente envuelto
@@ -77,3 +78,4 @@ const withAuth = (WrappedComponent, requiredRole) => {
 };
 
 export default withAuth;
+
