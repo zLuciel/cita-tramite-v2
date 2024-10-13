@@ -17,6 +17,7 @@ const withAuth = (WrappedComponent, requiredRole) => {
 
     // Función para verificar el token y obtener los datos del usuario
     const fetchUserData = async (token) => {
+      
       const userData = await tokenLoginUser(token);
 
       if (!userData || userData.message === "Unauthorized") {
@@ -63,9 +64,9 @@ const withAuth = (WrappedComponent, requiredRole) => {
     }
 
     // Si hay un error, redirigir al usuario
-    if (error) {
-      return null; // Puedes mostrar un mensaje de error si lo deseas
-    }
+    // if (error) {
+    //   return null; // Puedes mostrar un mensaje de error si lo deseas
+    // }
 
     return <WrappedComponent {...props} />; // Si está autenticado, renderiza el componente envuelto
   };

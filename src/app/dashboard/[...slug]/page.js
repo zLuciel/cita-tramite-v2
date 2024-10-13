@@ -138,7 +138,7 @@ const Page = ({ params }) => {
     setDocumentUser([]);
     router.back();
   };
-  console.log(userOne, 1444);
+
 
   return (
     <>

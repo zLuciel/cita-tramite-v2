@@ -96,8 +96,9 @@ const Page = () => {
       }
     };
     fetchFile(id, user.token);
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, user.token, refresh]);
+  }, [id, refresh]);
 
   const handleSubsanar = () => {
     setStatus(1);

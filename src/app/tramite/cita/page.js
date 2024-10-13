@@ -66,7 +66,7 @@ const Page = () => {
 
     getAdmi();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user.token, refresh]);
+  }, [refresh]);
 
   useEffect(() => {
     const timeAvilid = async () => {
@@ -98,7 +98,7 @@ const Page = () => {
 
     timeAvilid();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [idSuper, selectedDate, user.token]);
+  }, [idSuper, selectedDate]);
 
   const handleCreateCita = async () => {
     notifications.show({

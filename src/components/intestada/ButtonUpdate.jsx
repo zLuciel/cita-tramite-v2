@@ -122,7 +122,7 @@ const ButtonUpdate = ({
     <>
       {/* si hay documento muestra*/}
 
-      {(matchingFile || stateOk[getfileName]) && (
+      {(stateOk[getfileName]) && (
         <div className="flex gap-2 self-start lg:self-end  md:self-end sm:self-end ">
           <Link
             className={"self-end"}
@@ -147,7 +147,7 @@ const ButtonUpdate = ({
         </div>
       )}
 
-      {!matchingFile && !stateOk[getfileName] && (
+      {!stateOk[getfileName] && (
         <div className="flex gap-2 self-start lg:self-end  md:self-end sm:self-end ">
           <Button
             className="self-end"

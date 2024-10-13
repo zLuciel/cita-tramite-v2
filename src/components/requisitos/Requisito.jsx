@@ -21,8 +21,11 @@ const Requisito = ({ dataDocument, inestadaReq }) => {
   const [loadingFile, setLoadingFile] = useState(false);
   const [completFileInput, setCompletFileInput] = useState([]);
   const [memoryProcess, setMemoryProcess] = useState([]);
-
+  const lengthState = Object.keys(stateOk).length;
   const [update, setUpdate] = useState(false);
+  let allTrue = 0;
+  if (lengthState !== 0)
+    allTrue = Object.values(stateOk).filter((value) => value === true).length;
 
   useEffect(() => {
     const verifyFileUser = async () => {
@@ -31,18 +34,13 @@ const Requisito = ({ dataDocument, inestadaReq }) => {
         user.token,
         idDocument
       );
-      console.log(res, "viendo error");
-
+      const incomplete = res?.status !== "INCOMPLETO";
+      const errorStatus =
+        (!res?.statusCode || res.statusCode !== 404) && res.statusCode !== 500;
       setCompletFileInput(CompletFileInput);
       setMemoryProcess(CompletFileInput);
 
-      if (
-        res?.status !== "INCOMPLETO" &&
-        (!res?.statusCode || res.statusCode !== 404) &&
-        res.statusCode !== 500
-      ) {
-        setActive(3);
-      }
+      if (incomplete && errorStatus) setActive(3);
     };
     verifyFileUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -130,7 +128,11 @@ const Requisito = ({ dataDocument, inestadaReq }) => {
           )}
 
           <Button
-            disabled={active === 1 && !(completFileInput.length === countFile)}
+            disabled={
+              active === 1 &&
+              !(lengthState.length === countFile) &&
+              allTrue !== countFile
+            }
             onClick={nextStep}
           >
             {active == 0 ? "INICIAR TRAMITE" : "INICIAR TRAMITE"}
