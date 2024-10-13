@@ -27,17 +27,18 @@ const fetchData = async ({
 }) => {
   if (idSection) {
     return dispatch(
-      fetchhAllNewTables({ token, idSection: idSectionPendiente })
+      fetchhAllNewTables({ token, idSection: idSectionPendiente, message:false })
     ).unwrap();
   } else if (idSectionPendiente) {
     return dispatch(
-      getAllPeding({ token, idSection: idSectionPendiente })
+      getAllPeding({ token, idSection: idSectionPendiente,message:false })
     ).unwrap();
   } else if (idSectionSubPendiente) {
     return dispatch(
       getAllPedingUnresolved({
         token,
         idSection: idSectionSubPendiente,
+        message:false
       })
     ).unwrap();
   } else {
@@ -110,13 +111,13 @@ const Page = ({ params }) => {
                 slug={slug}
               />
             )}
-            <Button
+            {/* <Button
               variant="gradient"
               gradient={{ from: "violet", to: "indigo", deg: 90 }}
               onClick={() => setRefresh(!refresh)}
             >
               ACTUALIZAR LISTA
-            </Button>
+            </Button> */}
           </div>
           <TablesUser
             nameSection={nameSection}

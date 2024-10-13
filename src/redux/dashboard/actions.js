@@ -5,9 +5,9 @@ const url = "https://xynydxu4qi.us-east-2.awsapprunner.com";
 
 export const fetchhAllNewTables = createAsyncThunk(
   "dashboard/fetchhAllNewTables", // Tipo de acción
-  async ({ token, idSection }, thunkAPI) => {
+  async ({ token, idSection,message }, thunkAPI) => {
     try {
-      messageRedux.initialMessageTable();
+     if(message) messageRedux.initialMessageTable()
       const resUser = await fetch(
         `${url}/api/process-status/completed-users/${idSection}`,
         {
@@ -30,17 +30,17 @@ export const fetchhAllNewTables = createAsyncThunk(
       // En caso de error (por ejemplo, error de red)
       return thunkAPI.rejectWithValue(error.message);
     } finally {
-      messageRedux.messageUpdateList();
+      if(message) messageRedux.messageUpdateList();
     }
   }
 );
 
 export const getAllPeding = createAsyncThunk(
   "dashboard/getAllPeding", // Tipo de acción
-  async ({ token, idSection }, thunkAPI) => {
+  async ({ token, idSection,message }, thunkAPI) => {
     
     try {
-      messageRedux.initialMessageTable();
+      if(message) messageRedux.initialMessageTable()
       const resUser = await fetch(
         `${url}/api/process-status/corrected/${idSection}`,
         {
@@ -63,16 +63,16 @@ export const getAllPeding = createAsyncThunk(
       // En caso de error (por ejemplo, error de red)
       return thunkAPI.rejectWithValue(error.message);
     } finally {
-      messageRedux.messageUpdateList();
+     if(message) messageRedux.messageUpdateList();
     }
   }
 );
 
 export const getAllPedingUnresolved = createAsyncThunk(
   "dashboard/getAllPedingUnresolved", // Tipo de acción
-  async ({ token, idSection }, thunkAPI) => {
+  async ({ token, idSection ,message }, thunkAPI) => {
     try {
-      messageRedux.initialMessageTable();
+      if(message) messageRedux.initialMessageTable()
       const resUser = await fetch(
         `${url}/api/process-status/unresolved-documents/${idSection}`,
         {
@@ -95,7 +95,7 @@ export const getAllPedingUnresolved = createAsyncThunk(
       // En caso de error (por ejemplo, error de red)
       return thunkAPI.rejectWithValue(error.message);
     } finally {
-      messageRedux.messageUpdateList();
+      if(message) messageRedux.messageUpdateList();
     }
   }
 );
