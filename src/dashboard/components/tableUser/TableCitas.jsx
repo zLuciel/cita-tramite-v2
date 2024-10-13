@@ -19,8 +19,9 @@ export default function TablesCita({ allUser,setRefresh = false,refresh = false 
       const transformedRows = allUser.map((appointment,index) => ({
         idIndex:index,
         id: appointment.id,
-        dni: appointment.reservedBy.dni,
-        firstName: appointment.reservedBy.firstName.toUpperCase(),
+        dni: appointment.reservedBy.documentNumber,
+        apellido_paterno: appointment.reservedBy.apellido_paterno.toUpperCase(),
+        apellido_materno: appointment.reservedBy.apellido_materno.toUpperCase(),
         lastName: appointment.reservedBy.lastName.toUpperCase(),
         mobileNumber: appointment.reservedBy.mobileNumber,
         email: appointment.reservedBy.email,
@@ -90,7 +91,8 @@ export default function TablesCita({ allUser,setRefresh = false,refresh = false 
     },
     { field: "dni", headerName: "DNI", width: 150, editable: false },
     { field: "firstName", headerName: "Nombres", width: 150, editable: false },
-    { field: "lastName", headerName: "Apellidos", width: 150, editable: false },
+    { field: "apellido_paterno", headerName: "Apellido Paterno", width: 150, editable: false },
+    { field: "apellido_materno", headerName: "Apellido Materno", width: 150, editable: false },
     {
       field: "sectionName",
       headerName: "Sección de documento",
