@@ -35,11 +35,18 @@ const Requisito = ({ dataDocument, inestadaReq }) => {
 
       setCompletFileInput(CompletFileInput);
       setMemoryProcess(CompletFileInput);
-      if (res?.status !== 'INCOMPLETO' && (!res?.statusCode || res.statusCode !== 404))
+
+      if (
+        res?.status !== "INCOMPLETO" &&
+        (!res?.statusCode || res.statusCode !== 404) &&
+        res.statusCode !== 500
+      ) {
         setActive(3);
+      }
     };
     verifyFileUser();
-  }, [countFile, idDocument, user.token]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [countFile, idDocument]);
 
   const nextStep = () => {
     //asegurate que llene el formulario
