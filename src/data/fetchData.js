@@ -531,18 +531,35 @@ async function LoginPagoOnline(data) {
 }
 
 async function LoginFormPost(data) {
-  
-  
-  const resPagoOnline = await LoginPagoOnline(data);
- 
-  const bodyForm = {
-    documentNumber: resPagoOnline.usuario.numero_documento,
-    firstName: resPagoOnline.usuario.nombres,
-    apellido_paterno: resPagoOnline.usuario.apellido_paterno,
-    apellido_materno: resPagoOnline.usuario.apellido_materno,
-    email: resPagoOnline.usuario.email,
-  };
+  // todo: solo usalo en el trabajo
+  // const resPagoOnline = await LoginPagoOnline(data);
 
+  // const bodyForm = {
+  //   documentNumber: resPagoOnline.usuario.numero_documento,
+  //   firstName: resPagoOnline.usuario.nombres,
+  //   apellido_paterno: resPagoOnline.usuario.apellido_paterno,
+  //   apellido_materno: resPagoOnline.usuario.apellido_materno,
+  //   email: resPagoOnline.usuario.email,
+  // };
+  // todo solo usalo fuera del trabajo
+  let bodyForm;
+  if (data.dni === "60702651") {
+    bodyForm = {
+      documentNumber: "60702651",
+      email: "jacoborosseau@gmail.com",
+      firstName: "NEIL",
+      apellido_paterno: "TOSCANO",
+      apellido_materno: "FERNANDEZ",
+    };
+  } else if (data.dni === "76735903") {
+    bodyForm = {
+      documentNumber: "76735903",
+      email: "76735963@CERTUS.EDU.PE",
+      firstName: "EMMA",
+      apellido_paterno: "ABREGU",
+      apellido_materno: "LOPEZ",
+    };
+  }
 
   const url = `https://xynydxu4qi.us-east-2.awsapprunner.com/api/auth/login`;
   const resProcess = await fetch(url, {
@@ -554,9 +571,7 @@ async function LoginFormPost(data) {
   });
 
   const res = await resProcess.json();
- console.log(res,74);
- 
-  
+
   return res;
 }
 
@@ -589,9 +604,9 @@ async function CreateUserLogin(data) {
     apellido_paterno: resPagoOnline.apellido_paterno,
     apellido_materno: resPagoOnline.apellido_materno,
     email: resPagoOnline.email,
-    address:data.address,
-    mobileNumber:data.mobileNumber,
-    district:data.district
+    address: data.address,
+    mobileNumber: data.mobileNumber,
+    district: data.district,
   };
 
   const url = `https://xynydxu4qi.us-east-2.awsapprunner.com/api/auth/login`;
@@ -607,11 +622,10 @@ async function CreateUserLogin(data) {
   return res;
 }
 
-
 async function UpdateUserLogin(data) {
-  const idUser = {...data};
+  const idUser = { ...data };
   delete data.idUser;
-  console.log(data,"viendo datos enviado")
+  console.log(data, "viendo datos enviado");
   const url = `https://xynydxu4qi.us-east-2.awsapprunner.com/api/user/${idUser.idUser}`;
   const resProcess = await fetch(url, {
     method: "PATCH",
@@ -622,8 +636,8 @@ async function UpdateUserLogin(data) {
   });
 
   const res = await resProcess.json();
-  console.log(res,"viendo res update");
-  
+  console.log(res, "viendo res update");
+
   return res;
 }
 //getCompletFilesInputs
