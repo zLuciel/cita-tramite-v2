@@ -124,10 +124,24 @@ const Page = () => {
       idSuper,
       selectedDate
     );
-
+   
     //todo valida si ya tiene cita de verdad
     const verifyCita = await dataApi.verifyCita(user.token, id);
-
+    if(res.error){
+      notifications.update({
+        id: id,
+        withCloseButton: true,
+        autoClose: 3000,
+        title: res.message,
+        message: "",
+        color: "red",
+        // icon: <FaFilePdf />,
+        className: "my-notification-class",
+        loading: false,
+      });
+      router.refresh();
+      return
+    }
     if (res.status === "PENDING") {
       setLoading(false)
       notifications.update({
@@ -179,7 +193,7 @@ const Page = () => {
             />
           )}
           <div className="px-10 py-4 relative">
-            {loading && <LodingFile/>}
+            {/* {loading && <LodingFile/>} */}
             <h1 className="text-3xl font-bold uppercase">Reserve su cita</h1>
             <p>Solo puede seleccionar los días sábados.</p>
             <div className="grid grid-cols-1 gap-y-8 lg:grid-cols-2 mt-4">
