@@ -33,13 +33,16 @@ const VisualCita = ({ id, token }) => {
       </h2>
       <div>
         <h3 className="text-2xl font-semibold">NOTA IMPORTANTE:</h3>
-        <p className="text-2xl">
+      <div className="flex flex-col gap-2 mt-2">
+      <p className="text-2xl">
           - Presentarse a la CITA, el titular con su documento identidad.
         </p>
+        
         <p className="text-2xl">
           - En caso de representante legal: Carta poder legalizada o vigencia de
           poder; según corresponda.
         </p>
+      </div>
       </div>
     </div>
   );
