@@ -11,4 +11,4 @@ import { Login } from "@/components/login/Login";
   );
 }
 
-export default withAuth(Home) 
+export default Home 

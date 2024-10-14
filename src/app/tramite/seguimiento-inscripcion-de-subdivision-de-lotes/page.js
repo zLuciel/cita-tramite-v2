@@ -35,6 +35,7 @@ const Page = () => {
   const [loading, setLoading] = useState(true);
   const [refresh, setRefresh] = useState(false);
   const [files, setFiles] = useState({}); // era objeto
+  const [filesMap, setFilesMap] = useState([]); // era objeto
   const matches = useMediaQuery("(min-width: 1099px)");
   const [loadingFile, setLoadingFile] = useState(false);
   const [idVeryCite, setVeryCiteid] = useState({
@@ -57,8 +58,7 @@ const Page = () => {
         setFilesArray(data);
         const validCitaFetch = await dataApi.getValidCita(token, id);
         const veryReserva = await dataApi.verifyCita(token, id);
-       
-        
+
         setValidCita(validCitaFetch);
         if (
           statusComplete?.status === "INCOMPLETO" ||
@@ -96,7 +96,7 @@ const Page = () => {
       }
     };
     fetchFile(id, user.token);
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, refresh]);
 
@@ -110,7 +110,15 @@ const Page = () => {
     window.open(`/confirmacion-de-cita?id=${id}`, "_blank");
   };
 
-  const handleRefresh = () => {
+  const handleRefresh = async () => {
+    filesMap.map(async (fileDocu) => {
+      await dataApi.updateDocumentFile(
+        { fileUrl: fileDocu.fileUrl },
+        user.token,
+        fileDocu.idFile
+      );
+    });
+    await dataApi.startTramiteDocument(user.token,statusComplete.id,true)
     setFiles({});
     setRefresh(!refresh);
   };
@@ -118,7 +126,7 @@ const Page = () => {
   const handleCita = (id) => {
     router.push(`/tramite/cita?id=${id}`);
   };
-
+  console.log(filesMap);
   return (
     <>
       <div className="body-grid">
@@ -128,7 +136,11 @@ const Page = () => {
           {loadingFile && <LodingFile />}
 
           {matches && (
-            <Username firstName={user.firstName} paterno={user.apellido_paterno} materno={user.apellido_materno} />
+            <Username
+              firstName={user.firstName}
+              paterno={user.apellido_paterno}
+              materno={user.apellido_materno}
+            />
           )}
           <div className="px-10 py-4">
             {(view == 0 || view == 3) && (
@@ -142,6 +154,8 @@ const Page = () => {
               </h1>
             )}
             <FileGroupFollow
+              filesMap={filesMap}
+              setFilesMap={setFilesMap}
               statusComplete={statusComplete}
               loadingFile={loadingFile}
               setLoadingFile={setLoadingFile}
@@ -210,3 +224,4 @@ const Page = () => {
 };
 
 export default withAuth(Page, "user");
+

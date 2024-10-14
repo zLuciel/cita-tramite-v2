@@ -37,31 +37,9 @@ import dataApi from "@/data/fetchData";
 
 const FormCreateUser = ({ registreForm, setView }) => {
   const [date, setDate] = useState(false);
-  // const [inputDate, setInputDate] = useState(null);
   const [emailVerify, setEmailVerify] = useState(false);
 
-  // const [inputValue, setInputValue] = useState("");
-  // const [error, setError] = useState("");
-
-  // function formatDateToISO(dateString = false) {
-  //   if (dateString) {
-  //     const date = new Date(dateString);
-  //     const utcDate = new Date(
-  //       Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
-  //     );
-
-  //     if (utcDate) {
-  //       return utcDate.toISOString().split("T")[0];
-  //     }
-  //   }
-  // }
-
   const registreApi = async (data) => {
-    // if (inputDate) {
-    //   const formdate = formatDateToISO(inputDate);
-    //   data.birthDate = formdate;
-    // }
-
     notifications.show({
       id: 15,
       withCloseButton: true,
@@ -74,7 +52,9 @@ const FormCreateUser = ({ registreForm, setView }) => {
     });
 
     try {
-      const json = dataApi.CreateUserLogin(data);
+      const json = await dataApi.CreateUserLogin(data);
+    
+      
       if (json.error) {
         notifications.update({
           id: 15,
@@ -98,7 +78,7 @@ const FormCreateUser = ({ registreForm, setView }) => {
           className: "",
           loading: false,
         });
-        if (!json.isVerified) setEmailVerify(true);
+        if (!json?.isVerified) setEmailVerify(true);
 
         return;
       }

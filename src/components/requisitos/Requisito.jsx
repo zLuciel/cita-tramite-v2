@@ -23,7 +23,6 @@ const Requisito = ({ dataDocument, inestadaReq }) => {
   const [memoryProcess, setMemoryProcess] = useState([]);
   const lengthState = Object.keys(stateOk).length;
   const [update, setUpdate] = useState(false);
-  const [idProcess, setIdProcess] = useState(false);
   let allTrue = 0;
   if (lengthState !== 0)
     allTrue = Object.values(stateOk).filter((value) => value === true).length;
@@ -36,8 +35,7 @@ const Requisito = ({ dataDocument, inestadaReq }) => {
         idDocument
       );
       //estados a confirmar
-
-      setIdProcess(res.id);
+      
 
       const incomplete = res?.status !== "INCOMPLETO";
       const completo = res?.status !== "COMPLETO";
@@ -54,8 +52,10 @@ const Requisito = ({ dataDocument, inestadaReq }) => {
 
   const nextStep = async () => {
     //asegurate que llene el formulario
-    if (active == 1) {
-      await dataApi.startTramiteDocument(user.token, idProcess);
+    if (active === 1) {
+     const res = await dataApi.getProcessFile(user.token, idDocument);
+     const resProcees =  await dataApi.startTramiteDocument(user.token, res.id);
+     
       setActive(3);
       return;
     }

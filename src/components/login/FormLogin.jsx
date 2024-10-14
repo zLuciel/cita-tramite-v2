@@ -53,7 +53,19 @@ const FormLogin = ({ form }) => {
         open();
         return;
       }
-      if (!jsondata.emailVerified) {
+      if (jsondata.error) {
+        notifications.update({
+          id: 70,
+          withCloseButton: true,
+          autoClose: 3000,
+          title: jsondata.message,
+          message: "",
+          color: "grape",
+          loading: false,
+        });
+        return
+      }
+      if (!jsondata?.emailVerified) {
         setVerifyEmail(jsondata.message);
         notifications.update({
           id: 70,

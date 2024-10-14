@@ -1,3 +1,5 @@
+import { error } from "@jswork/next";
+
 async function sectionDocument(token) {
   const url =
     "https://xynydxu4qi.us-east-2.awsapprunner.com/api/section-type-document";
@@ -543,10 +545,18 @@ async function sendVeryDocument(token, email) {
   return res;
 }
 
-async function startTramiteDocument(token, idProcess) {
-  const bodyJson = {
-    status: "EN_PROCESO",
-  };
+async function startTramiteDocument(token, idProcess, status = false) {
+  let bodyJson;
+  if (!status) {
+    bodyJson = {
+      status: "EN_PROCESO",
+    };
+  } else if (status) {
+    bodyJson = {
+      status: "CORREGIDO",
+    };
+  }
+
   const url = `https://xynydxu4qi.us-east-2.awsapprunner.com/api/process-status/${idProcess}`;
   const resProcess = await fetch(url, {
     method: "PATCH",
@@ -579,7 +589,12 @@ async function LoginPagoOnline(data) {
 async function LoginFormPost(data) {
   // todo: solo usalo en el trabajo
   // const resPagoOnline = await LoginPagoOnline(data);
-
+  // if (!resPagoOnline.success) {
+  //   return {
+  //     error: true,
+  //     message: resPagoOnline?.message || resPagoOnline?.errors.codigo,
+  //   };
+  // }
   // const bodyForm = {
   //   documentNumber: resPagoOnline.usuario.numero_documento,
   //   firstName: resPagoOnline.usuario.nombres,
@@ -633,7 +648,6 @@ async function CreateUserPagoOnline(data) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
     },
   });
 
@@ -643,19 +657,31 @@ async function CreateUserPagoOnline(data) {
 
 async function CreateUserLogin(data) {
   const resPagoOnline = await CreateUserPagoOnline(data);
-
+  if (!resPagoOnline.success) {
+    if (resPagoOnline?.errors.numero_documento) {
+      return {
+        error: true,
+        message: resPagoOnline.errors.numero_documento,
+      };
+    } else if (resPagoOnline?.errors.correo) {
+      return {
+        error: true,
+        message: resPagoOnline.errors.correo,
+      };
+    }
+  }
   const bodyForm = {
-    dni: resPagoOnline.numero_documento,
-    firstName: resPagoOnline.nombres,
-    apellido_paterno: resPagoOnline.apellido_paterno,
-    apellido_materno: resPagoOnline.apellido_materno,
-    email: resPagoOnline.email,
+    documentNumber: resPagoOnline.usuario.numero_documento,
+    firstName: resPagoOnline.usuario.nombres,
+    apellido_paterno: resPagoOnline.usuario.apellido_paterno,
+    apellido_materno: resPagoOnline.usuario.apellido_materno,
+    email: resPagoOnline.usuario.email,
     address: data.address,
     mobileNumber: data.mobileNumber,
     district: data.district,
   };
 
-  const url = `https://xynydxu4qi.us-east-2.awsapprunner.com/api/auth/login`;
+  const url = `https://xynydxu4qi.us-east-2.awsapprunner.com/api/auth/register`;
   const resProcess = await fetch(url, {
     method: "POST",
     headers: {
@@ -686,8 +712,10 @@ async function UpdateUserLogin(data) {
 
   return res;
 }
+
 //getCompletFilesInputs
 const dataApi = {
+  updateDocumentFile,
   startTramiteDocument,
   sendVeryDocument,
   sendObserDocument,
