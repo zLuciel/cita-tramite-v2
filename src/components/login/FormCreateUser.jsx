@@ -213,8 +213,9 @@ const FormCreateUser = ({ registreForm, setView }) => {
           {...registreForm.getInputProps("mobileNumber")}
         />
 
-        <div className="">
+        <div className="col-span-2">
           <PasswordInput
+          fullWidth
             label="CONTRASEÑA"
             placeholder="Ingrese su contraseña"
             leftSection={

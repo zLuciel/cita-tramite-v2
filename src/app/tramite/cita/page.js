@@ -101,17 +101,20 @@ const Page = () => {
   }, [idSuper, selectedDate]);
 
   const handleCreateCita = async () => {
-    notifications.show({
-      id: id,
-      withCloseButton: true,
-      autoClose: false,
-      title: "Creando cita espere...",
-      message: "",
-      color: "green",
-      // icon: <FaFilePdf />,
-      className: "my-notification-class",
-      loading: true,
-    });
+    if (idTime && idSuper && selectedDate) {
+      notifications.show({
+        id: id,
+        withCloseButton: true,
+        autoClose: false,
+        title: "Creando cita espere...",
+        message: "",
+        color: "green",
+        // icon: <FaFilePdf />,
+        className: "my-notification-class",
+        loading: true,
+      });
+    }
+
     const res = await dataApi.getCreateCita(
       user.token,
       id,
@@ -165,7 +168,11 @@ const Page = () => {
         {matches && <Header />}
         <main className="bg-white">
           {matches && (
-            <Username firstName={user.firstName} paterno={user.apellido_paterno} materno={user.apellido_materno} />
+            <Username
+              firstName={user.firstName}
+              paterno={user.apellido_paterno}
+              materno={user.apellido_materno}
+            />
           )}
           <div className="px-10 py-4">
             <h1 className="text-3xl font-bold uppercase">Reserve su cita</h1>

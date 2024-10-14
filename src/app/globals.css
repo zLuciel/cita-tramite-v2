@@ -86,6 +86,9 @@ body {
       center center/cover no-repeat;
   z-index: -1;
 }
+#mantine-3jtosv54p-body{
+  height: max-content !important;
+}
 .login-page::after,.presentacion::after{
   overflow: hidden;
   content: "";
