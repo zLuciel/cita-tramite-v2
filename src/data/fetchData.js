@@ -588,7 +588,7 @@ async function LoginPagoOnline(data) {
 async function LoginFormPost(data) {
   // todo: solo usalo en el trabajo
   // const resPagoOnline = await LoginPagoOnline(data);
-  // console.log(resPagoOnline,14188);
+
   
   // if (!resPagoOnline.success) {
   //   return {

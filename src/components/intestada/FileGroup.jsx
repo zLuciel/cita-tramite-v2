@@ -5,6 +5,8 @@ import { FileInput, Pill, ActionIcon } from "@mantine/core";
 import { MdDeleteForever } from "react-icons/md";
 
 import ButtonUpdate from "./ButtonUpdate";
+import { FaFilePdf } from "react-icons/fa6";
+import { notifications } from "@mantine/notifications";
 
 const FileGroup = ({
   dataDocument,
@@ -59,6 +61,21 @@ const FileGroup = ({
   };
 
   const handleFileMultiple = (file, typeId, name, idFile) => {
+    if (file.type !== "application/pdf") {
+      notifications.show({
+        id: 10,
+        withCloseButton: true,
+        autoClose: 3000,
+        title: "Solo archivo PDF",
+        message: "",
+        color: "red",
+        icon: <FaFilePdf />,
+        className: "my-notification-class",
+        loading: false,
+      });
+      return;
+    }
+
     setEstadoOk({ ...stateOk, [name]: false });
     if (file) {
       const updatedArray = completFileInput.map((file) =>
@@ -72,7 +89,7 @@ const FileGroup = ({
       }
     }
   };
- 
+
   return (
     <>
       {dataDocument?.typedocument.map((getfiles) => {

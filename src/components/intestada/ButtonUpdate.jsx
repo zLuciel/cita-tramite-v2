@@ -29,6 +29,7 @@ const ButtonUpdate = ({
   const { validatePdf, error } = usePdfValidator(10);
 
   const handleConverPostPdf = async (typeId, namePdf, idFileInput) => {
+    
     setLoadingFile(true);
     if (files[namePdf].length === 0) return;
 
@@ -101,6 +102,7 @@ const ButtonUpdate = ({
         setLoadingFile(false);
       }
     }
+  
 
     if (!validatePdf(fileConvert)) {
       setLoadingFile(false);
@@ -116,6 +118,7 @@ const ButtonUpdate = ({
         loading: false,
       });
     }
+    
   };
 
   return (
