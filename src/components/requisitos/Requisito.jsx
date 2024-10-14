@@ -36,8 +36,7 @@ const Requisito = ({ dataDocument, inestadaReq }) => {
         idDocument
       );
       //estados a confirmar
-      console.log(res,1418);
-      
+
       setIdProcess(res.id);
 
       const incomplete = res?.status !== "INCOMPLETO";

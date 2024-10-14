@@ -110,7 +110,8 @@ const Page = () => {
     window.open(`/confirmacion-de-cita?id=${id}`, "_blank");
   };
 
-  const handleRefresh = () => {
+  const handleRefresh = async () => {
+    await dataApi.startTramiteDocument(user.token, statusComplete.id);
     setFiles({});
     setRefresh(!refresh);
   };

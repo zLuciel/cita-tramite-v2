@@ -64,9 +64,10 @@ const withAuth = (WrappedComponent, requiredRole) => {
     }
 
     // Si hay un error, redirigir al usuario
-    // if (error) {
-    //   return null; // Puedes mostrar un mensaje de error si lo deseas
-    // }
+    if (error) {
+      router.push("/");
+      // return null; // Puedes mostrar un mensaje de error si lo deseas
+    }
 
     return <WrappedComponent {...props} />; // Si está autenticado, renderiza el componente envuelto
   };

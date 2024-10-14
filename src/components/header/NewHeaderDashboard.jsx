@@ -54,21 +54,24 @@ const NewHeaderDashboard = ({ Followid }) => {
   const pathname = usePathname();
   const arrayPathname = pathname.split("/");
   const slug = arrayPathname[arrayPathname.length - 1];
- 
-
 
   useEffect(() => {
     const totalCount = documentSection.reduce((acc, item) => {
-      const completeStatus = item.statusCounts.filter(status => status.status === "COMPLETO");
+      const completeStatus = item.statusCounts.filter(
+        (status) => status.status === "EN_PROCESO"
+      );
 
-      const completeCount = completeStatus.reduce((sum, status) => sum + parseInt(status.count, 10), 0);
+      const completeCount = completeStatus.reduce(
+        (sum, status) => sum + parseInt(status.count, 10),
+        0
+      );
 
       return acc + completeCount;
     }, 0);
 
     setCountProcess(totalCount);
-    
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [documentSection]);
   // Usa useMemo para memorizar el cálculo de items y pendientes
   const documentNew = useMemo(() => {
@@ -98,9 +101,9 @@ const NewHeaderDashboard = ({ Followid }) => {
       >
         {documentNew.map((item) => {
           const WithCompleteStatus = item.statusCounts.find(
-            (itemStatus) => itemStatus.status === "COMPLETO"
+            (itemStatus) => itemStatus.status === "EN_PROCESO"
           );
-          
+
           return (
             <Link
               href={`${item.link}${item.sectionSlug}-nuevos?idnuevo=${item.sectionId}`}
@@ -289,17 +292,15 @@ const NewHeaderDashboard = ({ Followid }) => {
       </div>
 
       <div className="w-full">
-        {user.token && (
-          <div className="w-full">
-            {/* <Divider
+        <div className="w-full">
+          {/* <Divider
               className="lista-user-diver"
               my="md"
               label={<Link href={"/dashboard"}>LISTA USUARIOS</Link>}
               labelPosition="center"
             /> */}
-            <Logout />
-          </div>
-        )}
+          <Logout />
+        </div>
       </div>
     </div>
   );
