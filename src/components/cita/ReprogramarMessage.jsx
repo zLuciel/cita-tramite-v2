@@ -49,38 +49,49 @@ function ReprogramarMessage({ id, token, message }) {
     setAlert(false);
     open();
   };
-  
+
   if (alert) {
     return (
-      <div className="absolute alert-repro flex justify-center items-center">
+      <div className="absolute alert-repro flex justify-center items-center px-3">
         <div className="max-width-reprogramar">
           <Alert
             variant="filled"
-            color="rgba(255, 92, 92, 1)"
+            color="rgba(66, 66, 66, 1)"
             radius="md"
             title="Alert title"
             icon={<FiAlertOctagon />}
           >
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. At
-            officiis, quae tempore necessitatibus placeat saepe.
-            <div className="flex gap-3 mt-6">
-              {" "}
-              <Button
-                onClick={handleModalView}
-                fullWidth
-                variant="gradient"
-                gradient={{ from: "green", to: "lime", deg: 90 }}
-              >
-                CONTINUAR
-              </Button>
-              <Button
-                onClick={() => setAlert(false)}
-                fullWidth
-                variant="gradient"
-                gradient={{ from: "pink", to: "grape", deg: 90 }}
-              >
-                CANCELAR
-              </Button>
+            <div className="py-4">
+              <h3 className="text-3xl font-semibold mb-3 uppercase">
+                ¿Estás seguro de que deseas reprogramar tu cita?
+              </h3>
+              <p>
+                {" "}
+                Al reprogramar tu cita, se cancelará la fecha y hora actuales, y
+                nos pondremos en contacto contigo para confirmar la nueva
+                disponibilidad. Esta acción no puede deshacerse. ¿Deseas
+                continuar con la reprogramación de la cita?
+              </p>
+
+              <div className="flex gap-3 mt-6">
+                {" "}
+                <Button
+                  onClick={handleModalView}
+                  fullWidth
+                  variant="filled"
+                  color="lime"
+                >
+                  CONTINUAR
+                </Button>
+                <Button
+                  onClick={() => setAlert(false)}
+                  fullWidth
+                  variant="filled"
+                  color="red"
+                >
+                  CANCELAR
+                </Button>
+              </div>
             </div>
           </Alert>
         </div>

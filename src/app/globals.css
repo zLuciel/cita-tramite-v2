@@ -22,15 +22,15 @@
   min-height: calc(100vh - 76px);
 }
 .max-width-reprogramar{
-  max-width: 500px;
+  max-width: 600px;
 }
 .alert-repro{
   z-index: 1;
   width: 100%;
   left: 0;
   top: 0;
-  height: calc(100vh - 76px);
-  backdrop-filter: blur(10px);
+  height: calc(100vh - 62px);
+  backdrop-filter: blur(5px);
 }
 .header-name {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.129); /* Sombra */
