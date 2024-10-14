@@ -13,6 +13,7 @@ import { notifications } from "@mantine/notifications";
 import Username from "@/components/username/Username";
 import Calendary from "@/components/pruebatesteo/Calendary/Calendary";
 import CardCita from "@/components/Card/CardCita";
+import LodingFile from "@/components/loading/LodingFile";
 
 const Page = () => {
   const { user } = useProduct();
@@ -23,7 +24,7 @@ const Page = () => {
   const [idSuper, setIdSuper] = useState(null);
   const [idTime, setIdTime] = useState(null);
   const [disable, setDisable] = useState(true);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [timeInitial, setTimeInitial] = useState(false);
   const matches = useMediaQuery("(min-width: 1099px)");
@@ -102,6 +103,7 @@ const Page = () => {
 
   const handleCreateCita = async () => {
     if (idTime && idSuper && selectedDate) {
+      setLoading(true)
       notifications.show({
         id: id,
         withCloseButton: true,
@@ -127,6 +129,7 @@ const Page = () => {
     const verifyCita = await dataApi.verifyCita(user.token, id);
 
     if (res.status === "PENDING") {
+      setLoading(false)
       notifications.update({
         id: id,
         withCloseButton: true,
@@ -142,6 +145,7 @@ const Page = () => {
       router.back();
     }
     if (res.ok) {
+      setLoading(false)
       notifications.update({
         id: id,
         withCloseButton: true,
@@ -174,7 +178,8 @@ const Page = () => {
               materno={user.apellido_materno}
             />
           )}
-          <div className="px-10 py-4">
+          <div className="px-10 py-4 relative">
+            {loading && <LodingFile/>}
             <h1 className="text-3xl font-bold uppercase">Reserve su cita</h1>
             <p>Solo puede seleccionar los días sábados.</p>
             <div className="grid grid-cols-1 gap-y-8 lg:grid-cols-2 mt-4">

@@ -21,6 +21,17 @@
 .headerdas {
   min-height: calc(100vh - 76px);
 }
+.max-width-reprogramar{
+  max-width: 500px;
+}
+.alert-repro{
+  z-index: 1;
+  width: 100%;
+  left: 0;
+  top: 0;
+  height: calc(100vh - 76px);
+  backdrop-filter: blur(10px);
+}
 .header-name {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.129); /* Sombra */
   background: rgb(244, 243, 243);
@@ -86,9 +97,7 @@ body {
       center center/cover no-repeat;
   z-index: -1;
 }
-#mantine-3jtosv54p-body{
-  height: max-content !important;
-}
+
 .login-page::after,.presentacion::after{
   overflow: hidden;
   content: "";
@@ -245,7 +254,7 @@ main {
 }
 
 /*cabezera heigth*/
-.m_5df29311{
+#mantine-je2uvb190-body{
   height: calc(100vh - 60px) !important;
 }
 /*select color*/
