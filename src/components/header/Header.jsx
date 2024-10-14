@@ -76,7 +76,7 @@ const Header = ({ Followid }) => {
   });
 
   return (
-    <div className="w-full flex gap-0 flex-col justify-between  items-center  py-4 bg-[#365f96] text-[white]">
+    <div className="w-full flex h-full gap-0 flex-col justify-between  items-center  py-4 bg-[#365f96] text-[white]">
       <div className="w-full flex flex-col items-center  gap-4">
         <h1 className="text-center text-[1.4rem] font-semibold">
           ¿Qué trámite desea realizar?

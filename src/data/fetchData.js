@@ -515,7 +515,6 @@ async function updateMessageCite(token, idCita, message) {
   return res;
 }
 
-
 async function sendObserDocument(token, email) {
   const url = `https://xynydxu4qi.us-east-2.awsapprunner.com/api/email/state-change?email=${email}`;
   const resProcess = await fetch(url, {
@@ -544,8 +543,23 @@ async function sendVeryDocument(token, email) {
   return res;
 }
 
+async function startTramiteDocument(token, idProcess) {
+  const bodyJson = {
+    status: "EN_PROCESO",
+  };
+  const url = `https://xynydxu4qi.us-east-2.awsapprunner.com/api/process-status/${idProcess}`;
+  const resProcess = await fetch(url, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(bodyJson),
+  });
 
-
+  const res = await resProcess.json();
+  return res;
+}
 
 // todo login para el usuario
 const urlPagoOnline = "http://172.16.69.13:8800/api";
@@ -674,6 +688,7 @@ async function UpdateUserLogin(data) {
 }
 //getCompletFilesInputs
 const dataApi = {
+  startTramiteDocument,
   sendVeryDocument,
   sendObserDocument,
   UpdateUserLogin,

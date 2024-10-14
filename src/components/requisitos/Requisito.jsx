@@ -23,6 +23,7 @@ const Requisito = ({ dataDocument, inestadaReq }) => {
   const [memoryProcess, setMemoryProcess] = useState([]);
   const lengthState = Object.keys(stateOk).length;
   const [update, setUpdate] = useState(false);
+  const [idProcess, setIdProcess] = useState(false);
   let allTrue = 0;
   if (lengthState !== 0)
     allTrue = Object.values(stateOk).filter((value) => value === true).length;
@@ -34,21 +35,28 @@ const Requisito = ({ dataDocument, inestadaReq }) => {
         user.token,
         idDocument
       );
+      //estados a confirmar
+      console.log(res,1418);
+      
+      setIdProcess(res.id);
+
       const incomplete = res?.status !== "INCOMPLETO";
+      const completo = res?.status !== "COMPLETO";
       const errorStatus =
         (!res?.statusCode || res.statusCode !== 404) && res.statusCode !== 500;
       setCompletFileInput(CompletFileInput);
       setMemoryProcess(CompletFileInput);
 
-      if (incomplete && errorStatus) setActive(3);
+      if (incomplete && errorStatus && completo) setActive(3);
     };
     verifyFileUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [countFile, idDocument]);
 
-  const nextStep = () => {
+  const nextStep = async () => {
     //asegurate que llene el formulario
     if (active == 1) {
+      await dataApi.startTramiteDocument(user.token, idProcess);
       setActive(3);
       return;
     }

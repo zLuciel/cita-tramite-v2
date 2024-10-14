@@ -57,8 +57,8 @@ const Page = () => {
         setFilesArray(data);
         const validCitaFetch = await dataApi.getValidCita(token, id);
         const veryReserva = await dataApi.verifyCita(token, id);
-        console.log(veryReserva, "viendo reserva");
-
+       
+        
         setValidCita(validCitaFetch);
         if (
           statusComplete?.status === "INCOMPLETO" ||
@@ -96,8 +96,9 @@ const Page = () => {
       }
     };
     fetchFile(id, user.token);
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id,refresh]);
+  }, [id, refresh]);
 
   const handleSubsanar = () => {
     setStatus(1);
@@ -127,11 +128,7 @@ const Page = () => {
           {loadingFile && <LodingFile />}
 
           {matches && (
-            <Username
-              firstName={user.firstName}
-              paterno={user.apellido_paterno}
-              materno={user.apellido_materno}
-            />
+            <Username firstName={user.firstName} paterno={user.apellido_paterno} materno={user.apellido_materno} />
           )}
           <div className="px-10 py-4">
             {(view == 0 || view == 3) && (

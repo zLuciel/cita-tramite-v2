@@ -131,12 +131,6 @@ const Page = () => {
             <Username firstName={user.firstName} paterno={user.apellido_paterno} materno={user.apellido_materno} />
           )}
           <div className="px-10 py-4">
-            {validCita?.processStatus?.status === "VERIFICADO" &&
-              validCita?.processStatus?.status !== "CITA_PROGRAMADA" && (
-                <CountdownTwoWeeks
-                  startDate={validCita?.processStatus?.updatedAt}
-                />
-              )}
             {(view == 0 || view == 3) && (
               <h1 className="text-2xl font-bold mb-4">
                 SEGUIMIENTO DE TRÁMITE

@@ -241,6 +241,10 @@ main {
   }
 }
 
+/*cabezera heigth*/
+.m_5df29311{
+  height: calc(100vh - 60px) !important;
+}
 /*select color*/
 .bg-blue-select input{
   background: linear-gradient(90deg, var(--mantine-color-blue-filled) 0%, var(--mantine-color-cyan-filled) 100%) !important;

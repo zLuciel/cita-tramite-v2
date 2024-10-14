@@ -19,9 +19,7 @@ const FileGroupFollow = ({
   filesArray,
   status,
   view,
-  loading,
   errorSubasanar,
-  loadingFile,
   setLoadingFile,
   files,
   setFiles,
@@ -112,14 +110,7 @@ const FileGroupFollow = ({
     if (fileConvert.type === "application/pdf" && validatePdf(fileConvert)) {
       try {
         const createFileNew = await dataApi.postFileOne(user.token,fileConvert, "","update",typeId)
-        console.log(createFileNew);
-        
-        // const res = await dataApi.updateFile(
-        //   user.token,
-        //   fileConvert,
-        //   typeId,
-        //   true
-        // );
+
 
         if (createFileNew.fileUrl) {
           setPdfLink(createFileNew.fileUrl);
@@ -165,8 +156,8 @@ const FileGroupFollow = ({
   return (
     <>
       {" "}
-      {statusComplete?.status === "INCOMPLETO" || statusComplete?.statusCode === 404 && <p>No hay documentos</p>}
-      {statusComplete?.status !== "INCOMPLETO" &&
+      {(statusComplete?.status === "INCOMPLETO" || statusComplete?.statusCode === 404 || statusComplete?.status === "COMPLETO") && <p>No hay documentos</p>}
+      {(statusComplete?.status !== "INCOMPLETO" && statusComplete?.status !== "COMPLETO") &&
         filesArray?.map((getfile) => (
           <div key={getfile.id} className="flex flex-col gap-4 items-center mb-2 lg:flex-row md:flex-row self-start">
             <FileInput
