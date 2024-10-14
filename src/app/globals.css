@@ -254,8 +254,8 @@ main {
 }
 
 /*cabezera heigth*/
-#mantine-je2uvb190-body{
-  height: calc(100vh - 60px) !important;
+#mantine-kyjt9f9jx-body{
+  min-height: calc(100vh - 60px) !important;
 }
 /*select color*/
 .bg-blue-select input{

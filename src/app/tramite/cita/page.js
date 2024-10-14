@@ -27,6 +27,7 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [timeInitial, setTimeInitial] = useState(false);
+  const [update, setUpdate] = useState(false);
   const matches = useMediaQuery("(min-width: 1099px)");
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -36,7 +37,6 @@ const Page = () => {
     const getAdmi = async () => {
       const validCitaFetch = await dataApi.getValidCita(user.token, id);
       setTimeInitial(validCitaFetch?.processStatus?.updatedAt);
-      console.log(validCitaFetch, 141414);
 
       try {
         const resSuper = await dataApi.getSuperUser(user.token, id);
@@ -99,7 +99,7 @@ const Page = () => {
 
     timeAvilid();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [idSuper, selectedDate]);
+  }, [idSuper, selectedDate,update]);
 
   const handleCreateCita = async () => {
     if (idTime && idSuper && selectedDate) {
@@ -139,6 +139,7 @@ const Page = () => {
         className: "my-notification-class",
         loading: false,
       });
+      setUpdate(!update)
       router.refresh();
       return
     }
