@@ -124,10 +124,10 @@ async function updateFile(token, file, id, newStatus = false) {
   return res;
 }
 
-async function updateStatus(token, status, id, details = null) {
+async function updateStatus(token, status, id, details = null,admi = false) {
   const jsonBody = details ? { details: details } : { status: status };
 
-  const url = `https://xynydxu4qi.us-east-2.awsapprunner.com/api/documents/${id}`;
+  const url = admi ?`https://xynydxu4qi.us-east-2.awsapprunner.com/api/documents/admin/${id}` :`https://xynydxu4qi.us-east-2.awsapprunner.com/api/documents/${id}`;
   const document = await fetch(url, {
     method: "PATCH",
     headers: {

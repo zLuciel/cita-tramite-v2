@@ -7,7 +7,6 @@ import { FaFilePdf } from "react-icons/fa6";
 import ModalObservadoText from "../observado/ModalObservadoText";
 import { useProduct } from "@/provider/ProviderContext";
 
-
 const IntestadaDocument = ({
   documentUser,
   token,
@@ -23,8 +22,7 @@ const IntestadaDocument = ({
   const url = "https://xynydxu4qi.us-east-2.awsapprunner.com/api/files/pdf";
 
   const handleChange = async (id, value) => {
-    await dataApi.updateStatus(token, value, id);
-    // await dataApi.getValidCita(token, dSection);
+    await dataApi.updateStatus(token, value, id, null, true);
     const data = await dataApi.getUserDocumentSection(
       token,
       idSection,
@@ -35,7 +33,7 @@ const IntestadaDocument = ({
     const allVerified = data.every((doc) => doc.status == "VERIFICADO");
     const hasObserved = data.some((doc) => doc.status === "OBSERVADO");
 
-    setObserFile(hasObserved)
+    setObserFile(hasObserved);
     setDocumentUser(data);
     setVerified(allVerified);
     setRefresh(allInProcess);
@@ -54,7 +52,13 @@ const IntestadaDocument = ({
             />
             {!email && (
               <Select
-              className={`${getfile.status === "EN PROCESO" ? "bg-blue-select" : getfile.status === "VERIFICADO" ? "bg-green-select" : "bg-red-select"}`}
+                className={`${
+                  getfile.status === "EN PROCESO"
+                    ? "bg-blue-select"
+                    : getfile.status === "VERIFICADO"
+                    ? "bg-green-select"
+                    : "bg-red-select"
+                }`}
                 data={["EN PROCESO", "VERIFICADO", "OBSERVADO"]}
                 value={getfile.status}
                 allowDeselect={false}
