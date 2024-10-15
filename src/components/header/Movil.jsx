@@ -22,14 +22,18 @@ function Movil({ Followid, role }) {
       {role !== "administrator" && (
         <>
           {" "}
-          <Drawer className="" opened={opened} onClose={close}>
+          <Drawer className="header-drawer" opened={opened} onClose={close}>
             {role === "super user" && <NewHeaderDashboard />}
             {role !== "super user" && <Header Followid={Followid} />}
           </Drawer>
           <Burger color="lime" onClick={open} aria-label="Toggle navigation" />
         </>
       )}
-      {role === "administrator" && <div style={{maxWidth:"300px"}}><Logout/></div>}
+      {role === "administrator" && (
+        <div style={{ maxWidth: "300px" }}>
+          <Logout />
+        </div>
+      )}
     </nav>
   );
 }

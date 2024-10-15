@@ -18,7 +18,7 @@ const VisualCita = ({ id, token }) => {
       const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // Los meses son 0-indexed
       const year = date.getUTCFullYear();
       const formattedDate = `${day}/${month}/${year}`;
-      setFecha(formattedDate)
+      setFecha(formattedDate);
     };
 
     getCita();
@@ -26,23 +26,23 @@ const VisualCita = ({ id, token }) => {
 
   return (
     <div className="flex flex-col  gap-3">
-      <h1 className="text-4xl font-bold">CONFIRMACIÓN DE CITA</h1>
-      <h2 className="text-2xl">
+      <h1 className="lg:text-4xl md:text-4xl text-3xl font-bold">CONFIRMACIÓN DE CITA</h1>
+      <h2 className="text-1xl lg:text-2xl md:text-2xl">
         • Su cita fue programada para el día {fecha}, a horas{" "}
         {data?.schedule?.startTime}{" "}
       </h2>
       <div>
-        <h3 className="text-2xl font-semibold">NOTA IMPORTANTE:</h3>
-      <div className="flex flex-col gap-2 mt-2">
-      <p className="text-2xl">
-          - Presentarse a la CITA, el titular con su documento identidad.
-        </p>
-        
-        <p className="text-2xl">
-          - En caso de representante legal: Carta poder legalizada o vigencia de
-          poder; según corresponda.
-        </p>
-      </div>
+        <h3 className="text-1xl lg:text-2xl md:text-2xl font-semibold">NOTA IMPORTANTE:</h3>
+        <div className="flex flex-col gap-2 mt-2">
+          <p className="text-1xl lg:text-2xl md:text-2xl">
+            - Presentarse a la CITA, el titular con su documento identidad.
+          </p>
+
+          <p className="text-1xl lg:text-2xl md:text-2xl">
+            - En caso de representante legal: Carta poder legalizada o vigencia
+            de poder; según corresponda.
+          </p>
+        </div>
       </div>
     </div>
   );

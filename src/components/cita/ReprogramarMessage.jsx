@@ -55,8 +55,9 @@ function ReprogramarMessage({ id, token, message }) {
       <div className="absolute alert-repro flex justify-center items-center px-3">
         <div className="max-width-reprogramar">
           <Alert
-            variant="filled"
-            color="rgba(66, 66, 66, 1)"
+            className="border-color-orange"
+            variant="white"
+            color="orange"
             radius="md"
             title="Alert title"
             icon={<FiAlertOctagon />}
@@ -78,15 +79,15 @@ function ReprogramarMessage({ id, token, message }) {
                 <Button
                   onClick={handleModalView}
                   fullWidth
-                  variant="filled"
-                  color="lime"
+                  variant="light"
+                  color="green"
                 >
                   CONTINUAR
                 </Button>
                 <Button
                   onClick={() => setAlert(false)}
                   fullWidth
-                  variant="filled"
+                  variant="light"
                   color="red"
                 >
                   CANCELAR

@@ -11,7 +11,7 @@ const Page = () => {
   const id = searchParams.get('id');
 
   return (
-    <div className='w-full h-screen login-page flex text-white justify-center items-center'>
+    <div className='w-full h-screen login-page flex text-white justify-center items-center p-6'>
       <VisualCita id={id} token={user.token} />
     </div>
   )
