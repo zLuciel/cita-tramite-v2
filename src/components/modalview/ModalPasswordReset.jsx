@@ -1,12 +1,14 @@
 import React from "react";
 import { useDisclosure } from "@mantine/hooks";
-import { Modal, Button, Input, TextInput } from "@mantine/core";
+import { Modal, Button, Input, TextInput, InputBase } from "@mantine/core";
 import { MdEmail } from "react-icons/md";
 import sjl from "@/assets/logo.png";
 import Image from "next/image";
 import { useForm } from "@mantine/form";
 import dataApi from "@/data/fetchData";
 import { notifications } from "@mantine/notifications";
+import { LiaDigitalTachographSolid } from "react-icons/lia";
+import { IMaskInput } from "react-imask";
 
 const ModalPasswordReset = () => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -14,11 +16,12 @@ const ModalPasswordReset = () => {
   const formEmail = useForm({
     mode: "uncontrolled",
     initialValues: {
-      email: "",
+      dni: "",
     },
 
     validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Email inválido"),
+      dni: (value) =>
+        /^\d{8}$/.test(value) ? null : "Ingrese un numero de documento válido",
     },
   });
 
@@ -34,9 +37,9 @@ const ModalPasswordReset = () => {
       loading: true,
     });
 
-    const res = await dataApi.RecupePasswordEmail(value.email);
+    const res = await dataApi.ResetPassword(value.dni);
 
-    if (res.data.emailSent) {
+    if (res.success) {
       notifications.update({
         id: 15,
         withCloseButton: true,
@@ -47,13 +50,14 @@ const ModalPasswordReset = () => {
         className: "",
         loading: false,
       });
+      close();
     }
-    if (res.error) {
+    if (!res.success) {
       notifications.update({
         id: 15,
         withCloseButton: true,
         autoClose: 3000,
-        title: res.message,
+        title: res.errors.numero_documento,
         message: "",
         color: "red",
         className: "",
@@ -81,13 +85,20 @@ const ModalPasswordReset = () => {
           <div className="flex justify-center items-center mb-2">
             <Image src={sjl} width={250} alt="logo san juan de lurigancho" />
           </div>
-          <TextInput
+          <InputBase
             withAsterisk
-            label="Ingrese su correo de recuperación"
-            placeholder="ejemplo@gmail.com"
-            leftSection={<MdEmail size={16} />}
-            key={formEmail.key("email")}
-            {...formEmail.getInputProps("email")}
+            label="Recuperación de contraseña"
+            component={IMaskInput}
+            mask="00000000"
+            placeholder="Ingrese su dni"
+            leftSection={
+              <LiaDigitalTachographSolid
+                className="flex justify-center items-center"
+                size={16}
+              />
+            }
+            key={formEmail.key("dni")}
+            {...formEmail.getInputProps("dni")}
           />
           <Button
             type="submit"
@@ -96,7 +107,7 @@ const ModalPasswordReset = () => {
             variant="gradient"
             gradient={{ from: "blue", to: "cyan", deg: 90 }}
           >
-            ENVIAR RECUPERACIÓN
+            ENVIAR RECUPERACIÓN DE CONTRASEÑA
           </Button>
         </form>
       </Modal>

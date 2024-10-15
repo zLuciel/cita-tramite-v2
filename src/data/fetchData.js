@@ -1,7 +1,5 @@
-
 async function sectionDocument(token) {
-  const url =
-    `${process.env.NEXT_PUBLIC_URL}/section-type-document`;
+  const url = `${process.env.NEXT_PUBLIC_URL}/section-type-document`;
   const document = await fetch(url, {
     method: "GET",
     headers: {
@@ -123,10 +121,12 @@ async function updateFile(token, file, id, newStatus = false) {
   return res;
 }
 
-async function updateStatus(token, status, id, details = null,admi = false) {
+async function updateStatus(token, status, id, details = null, admi = false) {
   const jsonBody = details ? { details: details } : { status: status };
 
-  const url = admi ?`${process.env.NEXT_PUBLIC_URL}/documents/admin/${id}` :`${process.env.NEXT_PUBLIC_URL}/documents/${id}`;
+  const url = admi
+    ? `${process.env.NEXT_PUBLIC_URL}/documents/admin/${id}`
+    : `${process.env.NEXT_PUBLIC_URL}/documents/${id}`;
   const document = await fetch(url, {
     method: "PATCH",
     headers: {
@@ -385,33 +385,33 @@ async function postTokenVerifyEmail(token) {
   return res;
 }
 
-async function RecupePasswordEmail(email) {
-  const url = `${process.env.NEXT_PUBLIC_URL}/auth/reset-password?email=${email}`;
-  const resUser = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+// async function RecupePasswordEmail(email) {
+//   const url = `${process.env.NEXT_PUBLIC_URL}/auth/reset-password?email=${email}`;
+//   const resUser = await fetch(url, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//   });
 
-  const res = await resUser.json();
-  return res;
-}
+//   const res = await resUser.json();
+//   return res;
+// }
 
-async function newPassword(token, password) {
-  const jsonNewPassword = { password: password };
-  const url = `${process.env.NEXT_PUBLIC_URL}/auth/set-password?token=${token}`;
-  const resUser = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(jsonNewPassword),
-  });
+// async function newPassword(token, password) {
+//   const jsonNewPassword = { password: password };
+//   const url = `${process.env.NEXT_PUBLIC_URL}/auth/set-password?token=${token}`;
+//   const resUser = await fetch(url, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(jsonNewPassword),
+//   });
 
-  const res = await resUser.json();
-  return res;
-}
+//   const res = await resUser.json();
+//   return res;
+// }
 
 async function getAllPedingCita(token) {
   const url = `${process.env.NEXT_PUBLIC_URL}/documents/all-valid/without-appointment`;
@@ -589,7 +589,6 @@ async function LoginFormPost(data) {
   // todo: solo usalo en el trabajo
   // const resPagoOnline = await LoginPagoOnline(data);
 
-  
   // if (!resPagoOnline.success) {
   //   return {
   //     error: true,
@@ -698,7 +697,6 @@ async function CreateUserLogin(data) {
 async function UpdateUserLogin(data) {
   const idUser = { ...data };
   delete data.idUser;
-  console.log(data, "viendo datos enviado");
   const url = `${process.env.NEXT_PUBLIC_URL}/user/${idUser.idUser}`;
   const resProcess = await fetch(url, {
     method: "PATCH",
@@ -709,13 +707,25 @@ async function UpdateUserLogin(data) {
   });
 
   const res = await resProcess.json();
-  console.log(res, "viendo res update");
+  return res;
+}
 
+async function ResetPassword(dni) {
+  const url = `${urlPagoOnline}/recuperar-credenciales?numero_documento=${dni}`;
+  const resProcess = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const res = await resProcess.json();
   return res;
 }
 
 //getCompletFilesInputs
 const dataApi = {
+  ResetPassword,
   updateDocumentFile,
   startTramiteDocument,
   sendVeryDocument,
@@ -730,8 +740,6 @@ const dataApi = {
   getCompletFilesInputs,
   getProcessFile,
   getAllPedingCita,
-  newPassword,
-  RecupePasswordEmail,
   postTokenVerifyEmail,
   deleteHisoryUser,
   deleteCita,

@@ -53,6 +53,8 @@ const Page = () => {
     const fetchFile = async (id, token) => {
       try {
         const resVeryStatus = await dataApi.getProcessFile(token, id);
+        console.log(resVeryStatus,"VIENDO EN EFECT");
+        
         setStatusComplete(resVeryStatus);
         const data = await dataApi.getFilesUser(id, token);
         setFilesArray(data);
@@ -118,8 +120,10 @@ const Page = () => {
         fileDocu.idFile
       );
     });
-    const resVeryStatus = await dataApi.getProcessFile(token, id);
-    await dataApi.startTramiteDocument(user.token,resVeryStatus.id,true)
+
+    const resVeryStatus = await dataApi.getProcessFile(user.token, id);
+    const start = await dataApi.startTramiteDocument(user.token,resVeryStatus.id,true)
+
     setFiles({});
     setRefresh(!refresh);
   };
@@ -127,7 +131,7 @@ const Page = () => {
   const handleCita = (id) => {
     router.push(`/tramite/cita?id=${id}`);
   };
-  console.log(filesMap);
+
   return (
     <>
       <div className="body-grid">
