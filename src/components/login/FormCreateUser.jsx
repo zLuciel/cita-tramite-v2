@@ -53,8 +53,7 @@ const FormCreateUser = ({ registreForm, setView }) => {
 
     try {
       const json = await dataApi.CreateUserLogin(data);
-    
-      
+
       if (json.error) {
         notifications.update({
           id: 15,
@@ -108,9 +107,11 @@ const FormCreateUser = ({ registreForm, setView }) => {
       onSubmit={registreForm.onSubmit((values) => registreApi(values))}
     >
       <div className="grid grid-cols-2 gap-x-10 gap-y-3">
-        <TextInput
+        <InputBase
           withAsterisk
           label="DNI"
+          component={IMaskInput}
+          mask="00000000"
           placeholder="Ingrese su dni"
           leftSection={
             <LiaDigitalTachographSolid
@@ -121,6 +122,7 @@ const FormCreateUser = ({ registreForm, setView }) => {
           key={registreForm.key("dni")}
           {...registreForm.getInputProps("dni")}
         />
+
         <TextInput
           withAsterisk
           label="NOMBRES"
@@ -215,7 +217,7 @@ const FormCreateUser = ({ registreForm, setView }) => {
 
         <div className="col-span-2">
           <PasswordInput
-          fullWidth
+            fullWidth
             label="CONTRASEÑA"
             placeholder="Ingrese su contraseña"
             leftSection={

@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { useDisclosure, useLocalStorage } from "@mantine/hooks";
-import { Button, Group, Modal, PasswordInput, TextInput } from "@mantine/core";
+import {
+  Button,
+  Group,
+  InputBase,
+  Modal,
+  PasswordInput,
+  TextInput,
+} from "@mantine/core";
 import { LiaDigitalTachographSolid } from "react-icons/lia";
 import { TbPasswordFingerprint } from "react-icons/tb";
 import { useRouter } from "next/navigation";
@@ -8,6 +15,7 @@ import { notifications } from "@mantine/notifications";
 import { useProduct } from "@/provider/ProviderContext";
 import dataApi from "@/data/fetchData";
 import UpdateForm from "./UpdateForm";
+import { IMaskInput } from "react-imask";
 
 const FormLogin = ({ form }) => {
   const router = useRouter();
@@ -40,7 +48,7 @@ const FormLogin = ({ form }) => {
         jsondata.district === null &&
         jsondata.mobileNumber === null
       ) {
-        setIdUser(jsondata.id)
+        setIdUser(jsondata.id);
         notifications.update({
           id: 70,
           withCloseButton: true,
@@ -63,7 +71,7 @@ const FormLogin = ({ form }) => {
           color: "grape",
           loading: false,
         });
-        return
+        return;
       }
       if (!jsondata?.emailVerified) {
         setVerifyEmail(jsondata.message);
@@ -149,16 +157,23 @@ const FormLogin = ({ form }) => {
 
   return (
     <>
-      <Modal opened={opened} onClose={close} title="ACTUALIZE SUS DATOS A CONTINUACIÓN" centered>
+      <Modal
+        opened={opened}
+        onClose={close}
+        title="ACTUALIZE SUS DATOS A CONTINUACIÓN"
+        centered
+      >
         <UpdateForm idUser={idUser} close={close} />
       </Modal>
       <form
         className="flex flex-col gap-3"
         onSubmit={form.onSubmit((values) => loginApi(values))}
       >
-        <TextInput
+        <InputBase
           withAsterisk
           label="DNI"
+          component={IMaskInput}
+          mask="00000000"
           placeholder="Ingrese su dni"
           leftSection={
             <LiaDigitalTachographSolid

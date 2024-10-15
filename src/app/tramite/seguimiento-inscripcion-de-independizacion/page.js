@@ -118,7 +118,7 @@ const Page = () => {
         fileDocu.idFile
       );
     });
-    const resVeryStatus = await dataApi.getProcessFile(user.token, id);
+    const resVeryStatus = await dataApi.getProcessFile(token, id);
     await dataApi.startTramiteDocument(user.token,resVeryStatus.id,true)
     setFiles({});
     setRefresh(!refresh);
@@ -127,7 +127,7 @@ const Page = () => {
   const handleCita = (id) => {
     router.push(`/tramite/cita?id=${id}`);
   };
-
+  console.log(filesMap);
   return (
     <>
       <div className="body-grid">

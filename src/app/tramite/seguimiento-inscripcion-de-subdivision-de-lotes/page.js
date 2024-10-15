@@ -118,7 +118,8 @@ const Page = () => {
         fileDocu.idFile
       );
     });
-    await dataApi.startTramiteDocument(user.token,statusComplete.id,true)
+    const resVeryStatus = await dataApi.getProcessFile(token, id);
+    await dataApi.startTramiteDocument(user.token,resVeryStatus.id,true)
     setFiles({});
     setRefresh(!refresh);
   };
