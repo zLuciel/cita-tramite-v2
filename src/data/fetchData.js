@@ -587,40 +587,40 @@ async function LoginPagoOnline(data) {
 
 async function LoginFormPost(data) {
   // todo: solo usalo en el trabajo
-  // const resPagoOnline = await LoginPagoOnline(data);
+  const resPagoOnline = await LoginPagoOnline(data);
 
-  // if (!resPagoOnline.success) {
-  //   return {
-  //     error: true,
-  //     message: resPagoOnline?.message || resPagoOnline?.errors.codigo,
-  //   };
-  // }
-  // const bodyForm = {
-  //   documentNumber: resPagoOnline.usuario.numero_documento,
-  //   firstName: resPagoOnline.usuario.nombres,
-  //   apellido_paterno: resPagoOnline.usuario.apellido_paterno,
-  //   apellido_materno: resPagoOnline.usuario.apellido_materno,
-  //   email: resPagoOnline.usuario.email,
-  // };
-  // todo solo usalo fuera del trabajo
-  let bodyForm;
-  if (data.dni === "60702651") {
-    bodyForm = {
-      documentNumber: "60702651",
-      email: "jacoborosseau@gmail.com",
-      firstName: "NEIL",
-      apellido_paterno: "TOSCANO",
-      apellido_materno: "FERNANDEZ",
-    };
-  } else if (data.dni === "76735903") {
-    bodyForm = {
-      documentNumber: "76735903",
-      email: "76735963@CERTUS.EDU.PE",
-      firstName: "EMMA",
-      apellido_paterno: "ABREGU",
-      apellido_materno: "LOPEZ",
+  if (!resPagoOnline.success) {
+    return {
+      error: true,
+      message: resPagoOnline?.message || resPagoOnline?.errors.codigo,
     };
   }
+  const bodyForm = {
+    documentNumber: resPagoOnline.usuario.numero_documento,
+    firstName: resPagoOnline.usuario.nombres,
+    apellido_paterno: resPagoOnline.usuario.apellido_paterno,
+    apellido_materno: resPagoOnline.usuario.apellido_materno,
+    email: resPagoOnline.usuario.email,
+  };
+  // todo solo usalo fuera del trabajo
+  // let bodyForm;
+  // if (data.dni === "60702651") {
+  //   bodyForm = {
+  //     documentNumber: "60702651",
+  //     email: "jacoborosseau@gmail.com",
+  //     firstName: "NEIL",
+  //     apellido_paterno: "TOSCANO",
+  //     apellido_materno: "FERNANDEZ",
+  //   };
+  // } else if (data.dni === "76735903") {
+  //   bodyForm = {
+  //     documentNumber: "76735903",
+  //     email: "76735963@CERTUS.EDU.PE",
+  //     firstName: "EMMA",
+  //     apellido_paterno: "ABREGU",
+  //     apellido_materno: "LOPEZ",
+  //   };
+  // }
 
   const url = `${process.env.NEXT_PUBLIC_URL}/auth/login`;
   const resProcess = await fetch(url, {
